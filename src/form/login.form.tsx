@@ -12,10 +12,10 @@ export default function LoginPage() {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Register payload:', form);
-    // TODO: подключить API-запрос
+    //TODO: prisma
   };
 
   return (

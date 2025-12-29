@@ -1,6 +1,8 @@
 'use client';
+
 import Logo from '@/components/UI/Logo';
 import { useState } from 'react';
+import registerUser from '@/actions/Register';
 
 export default function RegisterForm() {
   const [form, setForm] = useState({ 
@@ -15,8 +17,8 @@ export default function RegisterForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Register payload:', form);
-    // TODO: подключить API-запрос
+    const result = registerUser(form)
+    console.log(result)
   };
 
   return (
