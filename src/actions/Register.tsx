@@ -5,17 +5,17 @@ import { prisma } from '@/utils/prisma'
 export default async function registerUser(form: IForm) {
   const { email, password, confirmPassword } = form
    
-  // if (password !== confirmPassword) {
-  //   throw new Error('Пароли не совпадают')
-  // }
+  if (password !== confirmPassword) {
+    throw new Error('Пароли не совпадают')
+  }
   
-  // const existingUser = await prisma.user.findUnique({
-  //   where: { email }
-  // })
+  const existingUser = await prisma.user.findUnique({
+    where: { email }
+  })
   
-  // if (existingUser) {
-  //   throw new Error('Пользователь с таким email уже существует')
-  // }
+  if (existingUser) {
+    throw new Error('Пользователь с таким email уже существует')
+  }
   
   try {
     const user = await prisma.user.create({
@@ -28,7 +28,7 @@ export default async function registerUser(form: IForm) {
     console.log('Пользователь создан:', user)
     return user
     
-  } catch (error) {
-    console.error('Ошибка при создании пользователя:', error) 
+  } catch (error) { 
+    throw new Error(`Ошибка регистрации: ${error instanceof Error ? error.message : 'Неизвестная ошибка'}`)
   }
 }

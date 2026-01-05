@@ -1,5 +1,7 @@
 import { SiteConf } from "@/config/site.conf";
 import Link from "next/link";
+import RegisterButton from "./RegistrButton";
+import SignUpButton from "./SignUpButton";
 
 export default function Menu({ 
   isMenuOpen, 
@@ -38,21 +40,9 @@ export default function Menu({
                 {item.label}
               </Link>
             ))}
-            <div className="flex flex-col space-y-3 pt-4 border-t border-gray-100">
-              <Link
-                href="/login"
-                className="px-4 py-3 text-base font-medium text-gray-700 hover:text-orange-600 hover:bg-gray-50 rounded-lg transition-colors duration-200"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Log in
-              </Link>
-              <Link
-                href="/signup"
-                className="px-4 py-3 text-base font-medium text-center text-gray-700 bg-orange-400 rounded-lg hover:bg-orange-500 hover:text-white transition-all duration-200"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Sign up
-              </Link>
+            <div className="flex flex-col space-y-3 border-gray-100 w-full p-4 bg-gray-100 rounded-lg">
+              <SignUpButton />
+              <RegisterButton />
             </div>
           </div>
         </div>

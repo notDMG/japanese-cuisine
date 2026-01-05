@@ -15,17 +15,22 @@ export default function RegisterForm() {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const result = registerUser(form)
-    console.log(result)
+    console.log(form)
+    try {
+      const result = await registerUser(form)
+      console.log(result)
+    } catch (error) {
+      console.error(error)
+    }
   };
 
   return (
       <div className='w-full max-w-sm p-8 bg-white rounded-2xl shadow-lg'>
         <Logo/>
         
-        <form onSubmit={handleSubmit} className='space-y-4 fle'>
+        <form onSubmit={handleSubmit} className='space-y-4'>
           <div>
            <label className='block text-black mb-1 text-[14px]'>Email</label> 
            <input 

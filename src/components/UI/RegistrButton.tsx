@@ -14,8 +14,6 @@ export default function RegisterButton() {
           Sign up
       </button>
 
-
-
       {isModalOpen && (
       <Modal 
         onClose={() => {

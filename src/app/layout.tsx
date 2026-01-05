@@ -3,6 +3,8 @@ import { Geist_Mono, Arimo } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/UI/Header";
 import { SiteConf } from "@/config/site.conf";
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth/auth";
 
 const arimo = Arimo({
   variable: "--font-geist-sans",
@@ -19,18 +21,24 @@ export const metadata: Metadata = {
   description: SiteConf.description
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth()
+
   return (
     <html lang="en">
       <body
         className={`${arimo.className} ${geistMono.variable} antialiased`}
       >
-        <Header/>
-        {children}
+        <SessionProvider session={session}>
+          <Header/>
+            <main className="className='w-full h-[calc(100vh-4rem)] flex items-center justify-center bg-white/95">
+              {children}
+            </main>    
+        </SessionProvider>   
       </body>
     </html>
   );
