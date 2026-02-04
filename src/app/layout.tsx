@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Arimo } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/UI/Header";
+import Header from "@/components/UI/layout/Header";
 import { SiteConf } from "@/config/site.conf";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth/auth";

@@ -47,4 +47,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
     })
   ],
+  session: {
+    strategy: "jwt",
+    maxAge: 3600,
+  },
+  secret: process.env.AUTH_SECRET,
+    callbacks: {
+      async jwt({ token, user }) {
+        if (user) token.id = user.id;
+        return token
+      }
+    }
 })

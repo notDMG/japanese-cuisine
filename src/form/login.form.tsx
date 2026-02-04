@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Logo from '@/components/UI/Logo';
+import { signInCredentials } from '@/actions/signIn';
 
 export default function LoginPage() {
   const [form, setForm] = useState({ 
@@ -14,8 +15,12 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Register payload:', form);
-    //TODO: prisma
+
+    const { email, password } = form;
+    const result = await signInCredentials({ email, password });
+
+    console.log('result', result)
+    console.log('Form submitted:', form);
   };
 
   return (

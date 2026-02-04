@@ -1,5 +1,5 @@
 import { useState } from "react"
-import Modal from "./Modal"
+import Modal from "./modal/Modal"
 import LoginPage from "@/form/login.form"
 
 export default function SignUpButton() {
