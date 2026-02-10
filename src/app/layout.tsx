@@ -5,6 +5,7 @@ import Header from "@/components/UI/layout/Header";
 import { SiteConf } from "@/config/site.conf";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth/auth";
+import { AppLoader } from "@/hoc/app-loader";
 
 const arimo = Arimo({
   variable: "--font-geist-sans",
@@ -34,11 +35,13 @@ export default async function RootLayout({
         className={`${arimo.className} ${geistMono.variable} antialiased`}
       >
         <SessionProvider session={session}>
-          <Header/>
-            <main className="className='w-full h-[calc(100vh-4rem)] flex items-center justify-center bg-white/95">
-              {children}
-            </main>    
-        </SessionProvider>   
+          <AppLoader>
+            <Header/>
+              <main className="className='w-full h-[calc(100vh-4rem)] flex items-center justify-center bg-white/95">
+                {children}
+              </main>
+          </AppLoader>   
+        </SessionProvider>      
       </body>
     </html>
   );

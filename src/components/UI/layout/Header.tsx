@@ -6,14 +6,12 @@ import { useState } from 'react';
 import SignUpButton from '../SignUpButton';
 import RegisterButton from '../RegistrButton';
 import Logo from '../Logo';
-import { useSession } from 'next-auth/react';
 import { LogOut } from '../LogOut';
+import { useAuthStore } from '@/store/auth.store';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const {data: session, status} = useSession();
-
-  const isAuth = status === 'authenticated';
+  const {isAuth, status} = useAuthStore()
 
   return (
     <header className="sticky top-0 z-50 w-full backdrop-blur-lg bg-white/95">
@@ -35,15 +33,18 @@ export default function Header() {
             ))}
           </nav>
           
-          {!isAuth ? 
+          {status === 'loading' ? <div className="h-5 w-5 animate-spin rounded-full border-3 border-solid border-orange-600 border-t-transparent mr-8"></div>
+            : !isAuth ? (
             <div className="hidden md:flex items-center space-x-4">
               <SignUpButton />
               <RegisterButton />
-            </div> 
-          : <div className="hidden md:flex items-center space-x-4"> 
+            </div>
+          ) : (
+            <div className="hidden md:flex items-center space-x-4">
               <LogOut />
-            </div>}
-
+            </div>
+          )}
+            
           <Menu isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
         </div> 
     </div>

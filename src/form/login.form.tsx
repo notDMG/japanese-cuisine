@@ -17,10 +17,9 @@ export default function LoginPage() {
     e.preventDefault();
 
     const { email, password } = form;
-    const result = await signInCredentials({ email, password });
+    await signInCredentials({ email, password });
 
-    console.log('result', result)
-    console.log('Form submitted:', form);
+    window.location.reload() 
   };
 
   return (
