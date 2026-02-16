@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono, Arimo } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/UI/layout/Header";
-import { SiteConf } from "@/config/site.conf";
+import { siteConf } from "@/config/site.conf";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth/auth";
 import { AppLoader } from "@/hoc/app-loader";
@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: SiteConf.title,
-  description: SiteConf.description
+  title: siteConf.title,
+  description: siteConf.description
 };
 
 export default async function RootLayout({
@@ -27,21 +27,21 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth()
+  const session = await auth();
 
   return (
-    <html lang="en">
+    <html lang="en" className="h-full overflow-hidden"> 
       <body
-        className={`${arimo.className} ${geistMono.variable} antialiased`}
+        className={`${arimo.className} ${geistMono.variable} antialiased h-full overflow-hidden`}
       >
         <SessionProvider session={session}>
           <AppLoader>
-            <Header/>
-              <main className="className='w-full h-[calc(100vh-4rem)] flex items-center justify-center bg-white/95">
-                {children}
-              </main>
-          </AppLoader>   
-        </SessionProvider>      
+            <Header />
+            <main className="w-full h-[calc(100vh-4rem)] flex items-center justify-center bg-white/95 overflow-hidden">
+              {children}
+            </main>
+          </AppLoader>
+        </SessionProvider>
       </body>
     </html>
   );

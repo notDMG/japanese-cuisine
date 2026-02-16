@@ -1,4 +1,4 @@
-import { SiteConf } from "@/config/site.conf"
+import { siteConf } from "@/config/site.conf"
 import Image from "next/image"
 
 export default function Logo() {
@@ -7,7 +7,7 @@ export default function Logo() {
       
         <Image
           src="sushi.svg"
-          alt={SiteConf.description}
+          alt={siteConf.description}
           width={30}
           height={30}
         />

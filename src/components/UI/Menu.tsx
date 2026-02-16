@@ -1,4 +1,4 @@
-import { SiteConf } from "@/config/site.conf";
+import { siteConf } from "@/config/site.conf";
 import Link from "next/link";
 import RegisterButton from "./RegistrButton";
 import SignUpButton from "./SignUpButton";
@@ -30,7 +30,7 @@ export default function Menu({
       {isMenuOpen && (
         <div className="absolute left-0 right-0 top-full mt-2 border border-gray-100 bg-white rounded-lg shadow-lg py-4">
           <div className="flex flex-col space-y-2 px-4">
-            {SiteConf.navItems.map((item) => (
+            {siteConf.navItems.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}

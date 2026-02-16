@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link';
-import { SiteConf } from '@/config/site.conf';
+import { siteConf } from '@/config/site.conf';
 import  Menu  from '@/components/UI/Menu'
 import { useState } from 'react';
 import SignUpButton from '../SignUpButton';
@@ -22,7 +22,7 @@ export default function Header() {
           </Link>
 
           <nav className="hidden md:flex items-center space-x-8">
-            {SiteConf.navItems.map((item) => (
+            {siteConf.navItems.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}

@@ -55,3 +55,32 @@ model VerificationToken {
   @@unique([identifier, token])
   @@map("verification_token")
 }
+
+model Ingredient {
+  id String @id @default(uuid())
+  name String
+  category Category
+  unit Unit
+  pricePerUnit Float? @map("price_per_unit")
+  description String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+enum Category {
+  VEGETABLES
+  FRUITS
+  MEAT
+  DAIRY
+  SPICES
+  OTHER
+}
+
+enum Unit {
+  GRAMS
+  KILOGRAMS
+  MILLILITIERS
+  LITERS
+  PIECES
+}
