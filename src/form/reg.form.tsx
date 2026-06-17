@@ -20,19 +20,16 @@ export default function RegisterForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Вызов серверного экшена
     const result = await registerUser(form);
 
-    // Если сервер вернул ошибку
     if (result?.error) {
       alert(result.error);
       return;
     }
 
-    // Если регистрация прошла успешно
     if (result?.success) {
       alert("Регистрация успешно завершена!");
-      router.push('/login'); // Перенаправляем на страницу входа
+      router.push('/login'); 
     }
   };
 
@@ -40,7 +37,6 @@ export default function RegisterForm() {
     <div className='w-full max-w-sm p-8 bg-white rounded-2xl shadow-lg'>
       <Logo/>
       <form onSubmit={handleSubmit} className='space-y-4'>
-        {/* Поля ввода остаются без изменений */}
         <div>
           <label className='block text-black mb-1 text-[14px]'>Email</label> 
           <input 
