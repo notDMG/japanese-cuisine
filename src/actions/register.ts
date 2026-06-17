@@ -10,7 +10,7 @@ export default async function registerUser(form: IForm) {
     return { error: 'Пароли не совпадают' };
   }
 
-  if (password.length < 6)  return { error: 'Пароль должен содеражать не менее 6 символов' }
+  if (password.length < 6)  return { error: 'Пароль должен содержать не менее 6 символов' }
   
   try {
     const existingUser = await prisma.user.findUnique({

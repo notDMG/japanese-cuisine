@@ -1,10 +1,9 @@
-import { PageContent } from "@/components/UI/common/PageContent";
-import { IngredietnForm } from "@/form/ingredient.form";
+import { IngredietnForm } from '@/forms/ingredient.form'
 
 export default function Ingredients() {
-  return (
-    <div>
-      <IngredietnForm />
-    </div>
-  )
+	return (
+		<div>
+			<IngredietnForm />
+		</div>
+	)
 }
