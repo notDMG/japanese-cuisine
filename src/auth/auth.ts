@@ -52,6 +52,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     maxAge: 3600,
   },
   secret: process.env.AUTH_SECRET,
+  pages: {
+    signOut: "/"
+  },
     callbacks: {
       async jwt({ token, user }) {
         if (user) token.id = user.id;

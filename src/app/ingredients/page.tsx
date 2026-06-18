@@ -1,9 +1,9 @@
-import { IngredietnForm } from '@/forms/ingredient.form'
+import { IngredientForm } from '@/forms/ingredient.form'
 
 export default function Ingredients() {
 	return (
 		<div>
-			<IngredietnForm />
+			<IngredientForm />
 		</div>
 	)
 }

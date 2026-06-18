@@ -56,7 +56,7 @@ export const siteConf: ISiteConf = {
         </p>
 
         <footer class="bg-gray-50 p-6 rounded-lg text-center italic">
-          "To eat is to live, and to eat well is to live fully." 
+          GitHub notDMG
           <br>Join us as we explore the endless horizons of Japanese flavors.
         </footer>
       </section>

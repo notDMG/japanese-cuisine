@@ -12,7 +12,7 @@ interface IIngredientFormData {
   description?: string
 }
 
-export function IngredietnForm() {
+export function IngredientForm() {
   const [formData, setFormData] = useState<IIngredientFormData>({
     name: '',
     category: '',

@@ -26,7 +26,7 @@ export default function LoginPage() {
       <div className='w-full max-w-sm p-8 bg-white rounded-2xl shadow-lg'>
         <Logo/>
         
-        <form onSubmit={handleSubmit} className='space-y-4 fle'>
+        <form onSubmit={handleSubmit} className='space-y-4'>
           <div>
            <label className='block text-black mb-1 text-[14px]'>Email</label> 
            <input 
@@ -57,7 +57,7 @@ export default function LoginPage() {
           <button
             type='submit'
             className='px-4 py-2 font-bold rounded-lg border-2 border-orange-400 text-black hover:bg-orange-400 hover:text-white transition-all duration-200 shadow-md'>
-              Log in
+              LOG IN
           </button>
         </div>
 
