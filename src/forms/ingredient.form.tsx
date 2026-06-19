@@ -3,8 +3,9 @@ import { useState } from "react"
 import { ChangeEvent } from "react"
 import { OPTIONS_CATEGORY } from "@/constans/selectOptions"
 import { UNIT_OPTIONS } from "@/constans/selectOptions"
+import { createIngredient } from '@/actions/ingredient'
 
-interface IIngredientFormData {
+export interface IIngredientFormData {
   name: string,
   category: string,
   unit: string,
@@ -21,9 +22,9 @@ export function IngredientForm() {
     description: ''
   })
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('form submitted:',formData)
+    await createIngredient(formData)
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
