@@ -24,14 +24,29 @@ export function IngredientForm() {
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await createIngredient(formData)
+    const result = await createIngredient(formData)
+
+    if (result?.error) {
+      alert(result.error)
+      return
+    }
+
+    alert('Ингредиент добавлен в ДБ!')
+
+    setFormData({
+      name: '',
+      category: '',
+      unit: '',
+      pricePerUnit: null,
+      description: ''
+    })
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'pricePerUnit' ? (value ? parseFloat(value) : null) : value
+      [name]: name === 'pricePerUnit' ? (value ? parseFloat(value) : 0) : value
     }));
   };
 
@@ -110,7 +125,7 @@ export function IngredientForm() {
             onChange={handleChange}
             rows={3}
             className="w-full text-black px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 outline-none resize-none"
-            placeholder="Brief details about the ingredient..."
+            placeholder="Добавить описание..."
           />
         </div>
 

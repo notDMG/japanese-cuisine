@@ -14,7 +14,7 @@ export async function createIngredient(formData: IIngredientFormData) {
 			pricePerUnit: formData.pricePerUnit,
 			description: formData.description
 		}
-	
+	 
 		const validatedData = ingredientSchema.parse(data)
 
 		const ingredient = await prisma.ingredient.create({

@@ -14,11 +14,11 @@ export const signInSchema = z.object({
 export const ingredientSchema = z.object({
   name: z.string().min(1, "Название обязательно"),
   
-  category: z.enum(["VEGETABLES", "FRUITS", "MEAT", "DAIRY", "SPICES", "OTHER"]),
+  category: z.enum(["VEGETABLES", "FRUITS", "MEAT", "DAIRY", "SPICES", "OTHER"], 'Выберите категорию'),
   
-  unit: z.enum(["GRAMS", "KILOGRAMS", "MILLILITERS", "LITERS", "PIECES"]),
+  unit: z.enum(["GRAMS", "KILOGRAMS", "MILLILITERS", "LITERS", "PIECES"], 'Укажите единицу измерения'),
   
-  pricePerUnit: z.number().min(1, "Укажите цену за штуку"),
-    
+  pricePerUnit: z.number().min(0, "Укажите цену за штуку"),
+  
   description: z.string().optional()
 })
