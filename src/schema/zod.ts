@@ -18,7 +18,7 @@ export const ingredientSchema = z.object({
   
   unit: z.enum(["GRAMS", "KILOGRAMS", "MILLILITERS", "LITERS", "PIECES"], 'Укажите единицу измерения'),
   
-  pricePerUnit: z.number().min(0, "Укажите цену за штуку"),
+  pricePerUnit: z.number().min(0, "Число должно быть положительным"),
   
   description: z.string().optional()
 })

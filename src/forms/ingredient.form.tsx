@@ -1,29 +1,42 @@
 'use client'
-import { useState } from "react"
-import { ChangeEvent } from "react"
-import { OPTIONS_CATEGORY } from "@/constans/selectOptions"
-import { UNIT_OPTIONS } from "@/constans/selectOptions"
+
+import { useForm, type SubmitHandler } from "react-hook-form"
+import { useEffect } from "react"
+import { OPTIONS_CATEGORY, UNIT_OPTIONS } from "@/constans/selectOptions"
 import { createIngredient } from '@/actions/ingredient'
 
 export interface IIngredientFormData {
-  name: string,
-  category: string,
-  unit: string,
-  pricePerUnit: number | null,
+  name: string
+  category: string
+  unit: string
+  pricePerUnit: number | null
   description?: string
 }
 
 export function IngredientForm() {
-  const [formData, setFormData] = useState<IIngredientFormData>({
-    name: '',
-    category: '',
-    unit: '',
-    pricePerUnit: null,
-    description: ''
+  const { 
+    register, 
+    handleSubmit, 
+    reset, 
+    formState: { isSubmitSuccessful, isSubmitting, errors } 
+  } = useForm<IIngredientFormData>({
+    mode: 'onBlur',
+    defaultValues: {
+      name: '',
+      category: '',
+      unit: '',
+      pricePerUnit: null,
+      description: ''
+    }
   })
   
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset()
+    }
+  }, [isSubmitSuccessful, reset])
+
+  const onSubmit: SubmitHandler<IIngredientFormData> = async (formData) => {
     const result = await createIngredient(formData)
 
     if (result?.error) {
@@ -32,73 +45,64 @@ export function IngredientForm() {
     }
 
     alert('Ингредиент добавлен в ДБ!')
-
-    setFormData({
-      name: '',
-      category: '',
-      unit: '',
-      pricePerUnit: null,
-      description: ''
-    })
   }
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === 'pricePerUnit' ? (value ? parseFloat(value) : 0) : value
-    }));
-  };
-
   return (
-    <div className="min-w-84.25 mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+    <div className="min-w-100 mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100">
       <h2 className="text-2xl font-bold text-black mb-6 border-b-2 border-orange-500 pb-2">
         New Ingredient
       </h2>
       
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div>
           <label className="block text-sm font-semibold text-black mb-1">Ingredient Name</label>
           <input
             type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
             placeholder="Banana"
-            className="w-full px-4 py-2 border text-black border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+            className="w-full px-4 py-2 mb-1 border text-black border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+            {...register('name', {
+              required: 'Пожалуйста введите название ингредиента',
+              pattern: {
+                value: /^[A-Za-zА-Яа-яЁё]+$/,
+                message: 'Название должно состоять из букв'
+              },
+              minLength: { value: 2, message: 'Минимум 2 символа' }
+            })}
           />
+          {errors.name && <p className="text-red-500 text-xs font-bold">{errors.name.message}</p>}
         </div>
 
         <div className="grid grid-cols-2 gap-5">
           <div>
             <label className="block text-sm font-semibold text-black mb-1">Category</label>
             <select
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border text-black border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+              className="w-full px-4 border text-black border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all py-4"
+              {...register('category', {
+                required: 'Выберите категорию'
+              })}
             >
               <option value="">Select</option>
               {OPTIONS_CATEGORY.map(category =>
                 <option key={category.value} value={category.value}>{category.label}</option>
-
               )}
             </select>
+            {errors.category && <p className="text-red-500 text-xs font-bold">{errors.category.message}</p>}
           </div>
 
           <div>
             <label className="block text-sm font-semibold text-black mb-1">Unit</label>
             <select
-              name="unit"
-              value={formData.unit}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border text-black border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+              className="w-full px-4 border text-black border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all py-4"
+              {...register('unit', {
+                required: 'Выберите ед.измерения'
+              })}
             >
               <option value="">Select</option>
               {UNIT_OPTIONS.map(unit =>
                 <option key={unit.value} value={unit.value}>{unit.label}</option>
               )}
             </select>
+            {errors.unit && <p className="text-red-500 text-xs font-bold">{errors.unit.message}</p>}
           </div>
         </div>
 
@@ -108,34 +112,40 @@ export function IngredientForm() {
             <span className="absolute left-3 top-2 text-gray-500">$</span>
             <input
               type="number"
-              name="pricePerUnit"
-              value={formData.pricePerUnit || ''}
-              onChange={handleChange}
+              step="any"
               placeholder="0.00"
               className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 text-black outline-none"
+              {...register('pricePerUnit', {
+                required: 'Укажите цену',
+                valueAsNumber: true,
+                min: {
+                  value: 0.01,
+                  message: 'Цена не может быть меньше 0.01$'
+                }
+              })}
             />
           </div>
+          {errors.pricePerUnit && <p className="text-red-600 text-xs  font-bold">{errors.pricePerUnit.message}</p>}
         </div>
 
         <div>
           <label className="block text-sm font-semibold text-black mb-1">Description</label>
           <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
             rows={3}
             className="w-full text-black px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 outline-none resize-none"
             placeholder="Добавить описание..."
+            {...register('description')}
           />
         </div>
 
         <button
           type="submit"
-          className="w-full bg-black text-white font-bold py-3 rounded-md hover:bg-orange-600 shadow-md uppercase tracking-wider text-sm duration-500 transition-colors"
+          disabled={isSubmitting}
+          className="w-full bg-black text-white font-bold py-3 rounded-md hover:bg-orange-600 shadow-md uppercase tracking-wider text-sm duration-500 transition-colors disabled:bg-gray-400"
         >
-          Add Ingredient
+          {isSubmitting ? 'Adding...' : 'Add Ingredient'}
         </button>
       </form>
     </div>
-  );
+  )
 }

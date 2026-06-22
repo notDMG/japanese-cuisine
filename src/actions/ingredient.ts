@@ -26,6 +26,7 @@ export async function createIngredient(formData: IIngredientFormData) {
 				description: validatedData.description
 			}
 		})
+
 		return { success: true, ingredient: ingredient}
 	} catch (error) {
 		if (error instanceof ZodError) {
