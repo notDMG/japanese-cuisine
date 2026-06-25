@@ -29,12 +29,6 @@ export function IngredientForm() {
       description: ''
     }
   })
-  
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset()
-    }
-  }, [isSubmitSuccessful, reset])
 
   const onSubmit: SubmitHandler<IIngredientFormData> = async (formData) => {
     const result = await createIngredient(formData)
@@ -46,6 +40,12 @@ export function IngredientForm() {
 
     alert('Ингредиент добавлен в ДБ!')
   }
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset()
+    }
+  }, [isSubmitSuccessful, reset])
 
   return (
     <div className="min-w-100 mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100">
@@ -61,7 +61,7 @@ export function IngredientForm() {
             placeholder="Banana"
             className="w-full px-4 py-2 mb-1 border text-black border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
             {...register('name', {
-              required: 'Пожалуйста введите название ингредиента',
+              required: 'Введите название ингредиента',
               pattern: {
                 value: /^[A-Za-zА-Яа-яЁё]+$/,
                 message: 'Название должно состоять из букв'

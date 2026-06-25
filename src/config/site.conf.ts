@@ -23,9 +23,9 @@ export const siteConf: ISiteConf = {
     { label: 'About Us', href: '/about' },
   ],
   pageContent: {
-    '/': {content: 'blablablabla'},
-    '/recipes': {content: 'blablablabla'},
-    '/ingredients': {content: '3'},
+    '/': {content: ''},
+    '/recipes': {content: ''},
+    '/ingredients': {content: ''},
     '/about': {content: `
       <section class="max-w-4xl mx-auto p-6 text-gray-800">
         <h1 class="text-3xl font-bold text-orange-600 mb-6">About Our Japanese Culinary Journey</h1>
