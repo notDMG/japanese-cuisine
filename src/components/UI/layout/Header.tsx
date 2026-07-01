@@ -21,7 +21,7 @@ export default function Header() {
 						<Logo />
 					</Link>
 
-					<nav className="hidden md:flex items-center space-x-8">
+					<nav className="hidden md:flex items-center space-x-12">
 						{siteConf.navItems.map(item => (
 							<Link
 								key={item.label}
@@ -33,18 +33,20 @@ export default function Header() {
 						))}
 					</nav>
 
-					{status === 'loading' ? (
-						<div className="h-5 w-5 animate-spin rounded-full border-3 border-solid border-orange-600 border-t-transparent mr-8"></div>
-					) : !isAuth ? (
-						<div className="hidden md:flex items-center space-x-4">
-							<SignUpButton />
-							<RegisterButton />
-						</div>
-					) : (
-						<div className="hidden md:flex items-center space-x-4">
-							<LogOut />
-						</div>
-					)}
+					<div className="hidden md:flex items-center justify-end min-w-[170px] h-9">
+						{status === 'loading' ? (
+							<div className="hidden md:block h-5 w-5 animate-spin rounded-full border-3 border-solid border-orange-600 border-t-transparent mr-8"></div>
+						) : !isAuth ? (
+							<div className="hidden md:flex items-center space-x-4">
+								<SignUpButton />
+								<RegisterButton />
+							</div>
+						) : (
+							<div className="hidden md:flex items-center space-x-4">
+								<LogOut />
+							</div>
+						)}
+					</div>
 
 					<Menu
 						isMenuOpen={isMenuOpen}

@@ -30,14 +30,14 @@ export default async function RootLayout({
   const session = await auth();
 
   return (
-    <html lang="en" className="h-full overflow-hidden"> 
+    <html lang="en" className="min-h-full"> 
       <body
-        className={`${arimo.className} ${geistMono.variable} antialiased h-full overflow-hidden`}
+        className={`${arimo.className} ${geistMono.variable} antialiased min-h-full bg-white text-black`}
       >
         <SessionProvider session={session}>
           <AppLoader>
             <Header />
-            <main className="w-full h-[calc(100vh-4rem)] flex items-center justify-center bg-white/95 overflow-hidden">
+            <main className="w-full min-h-[calc(100vh-4rem)] flex items-start justify-center bg-white p-4">
               {children}
             </main>
           </AppLoader>

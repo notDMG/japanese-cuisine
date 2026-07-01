@@ -7,11 +7,21 @@ interface IContent {
   content: string;
 }
 
+interface ITableContent {
+  name: string;
+  category: string;
+  unit: string;
+  pricePerUnit: string;
+  description: string;
+  action: string
+}
+
 interface ISiteConf {
   title: string;
   description: string;
   navItems: TItem[];
-  pageContent: Record<string, IContent>
+  pageContent: Record<string, IContent>,
+  tableContent: ITableContent
 }
 
 export const siteConf: ISiteConf = { 
@@ -61,5 +71,13 @@ export const siteConf: ISiteConf = {
         </footer>
       </section>
     `},
+  },
+  tableContent: {
+    name: 'Name',
+    category: 'Category',
+    unit: 'Unit',
+    pricePerUnit: 'Price per unit',
+    description: 'Description',
+    action: 'Action'
   }
 }

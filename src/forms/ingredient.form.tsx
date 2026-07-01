@@ -3,7 +3,7 @@
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { useEffect } from "react"
 import { OPTIONS_CATEGORY, UNIT_OPTIONS } from "@/constans/selectOptions"
-import { createIngredient } from '@/actions/ingredient'
+import { createIngredient } from '@/actions/createIngredient'
 
 export interface IIngredientFormData {
   name: string
@@ -31,10 +31,11 @@ export function IngredientForm() {
   })
 
   const onSubmit: SubmitHandler<IIngredientFormData> = async (formData) => {
+    
     const result = await createIngredient(formData)
 
     if (result?.error) {
-      alert(result.error)
+      alert("Ошибка при создании ингредиента")
       return
     }
 
@@ -48,7 +49,7 @@ export function IngredientForm() {
   }, [isSubmitSuccessful, reset])
 
   return (
-    <div className="min-w-100 mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+    <div className="min-w-90 bg-white p-8 rounded-xl shadow-xl border border-gray-100">
       <h2 className="text-2xl font-bold text-black mb-6 border-b-2 border-orange-500 pb-2">
         New Ingredient
       </h2>
@@ -107,7 +108,7 @@ export function IngredientForm() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-black mb-1">Price per Unit</label>
+          <label className="block text-sm font-semibold text-black mb-1">Price per unit</label>
           <div className="relative">
             <span className="absolute left-3 top-2 text-gray-500">$</span>
             <input
