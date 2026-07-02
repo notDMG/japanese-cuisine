@@ -1,11 +1,18 @@
 'use server'
 
+import { auth } from '@/auth/auth'
 import { IIngredientFormData } from '@/forms/ingredient.form'
 import { ingredientSchema } from '@/schema/zod'
 import { prisma } from '@/utils/prisma'
 import { ZodError } from 'zod'
 
 export async function createIngredient(formData: IIngredientFormData) {
+	const session = await auth()
+
+	if (!session || !session.user) {
+		return { success: false, error: 'Access denied. Please log in.' }
+	}
+
 	try {
 		const data = {
 			name: formData.name,
@@ -32,7 +39,7 @@ export async function createIngredient(formData: IIngredientFormData) {
 		if (error instanceof ZodError) {
 			return { error: error.issues.map((er) => er.message).join(', ') }
 		}
-		console.error('Ошибка при создании ингредиента', error)
-		return { success: false, error: 'Не удалось сохранить ингредиент'}
+		console.error('Error creating ingredient', error)
+		return { success: false, error: 'Failed to save the ingredient.'}
 	}
 }

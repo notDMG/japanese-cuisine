@@ -2,6 +2,8 @@ import { siteConf } from '@/config/site.conf'
 import Link from 'next/link'
 import RegisterButton from './RegisterButton'
 import SignUpButton from './SignUpButton'
+import { useAuthStore } from '@/store/auth.store'
+import { LogOut } from './LogOut'
 
 export default function Menu({
 	isMenuOpen,
@@ -10,6 +12,8 @@ export default function Menu({
 	isMenuOpen: boolean
 	setIsMenuOpen: (value: boolean) => void
 }) {
+	const { isAuth } = useAuthStore()
+
 	return (
 		<div className="md:hidden">
 			<button
@@ -62,10 +66,11 @@ export default function Menu({
 								{item.label}
 							</Link>
 						))}
+						{isAuth ? <LogOut /> : 
 						<div className="flex flex-col space-y-3 border-gray-100 w-full p-4 bg-gray-100 rounded-lg">
 							<SignUpButton />
 							<RegisterButton />
-						</div>
+						</div>}						
 					</div>
 				</div>
 			)}

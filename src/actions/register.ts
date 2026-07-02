@@ -7,10 +7,10 @@ export default async function registerUser(form: IForm) {
   const { email, password, confirmPassword } = form;
 
   if (password !== confirmPassword) {
-    return { error: 'Пароли не совпадают' };
+    return { error: 'Passwords do not match' };
   }
 
-  if (password.length < 6)  return { error: 'Пароль должен содержать не менее 6 символов' }
+  if (password.length < 6)  return { error: 'The password must contain at least 6 characters' }
   
   try {
     const existingUser = await prisma.user.findUnique({
@@ -18,7 +18,7 @@ export default async function registerUser(form: IForm) {
     });
     
     if (existingUser) {
-      return { error: 'Пользователь с таким email уже существует' };
+      return { error: 'A user with this email already exists' };
     }
 
     const pwHash = await saltAndHashPassword(password);
@@ -35,7 +35,7 @@ export default async function registerUser(form: IForm) {
   } catch (error) { 
     console.error('Registration error:', error);
     return { 
-      error: error instanceof Error ? error.message : 'Произошла непредвиденная ошибка' 
+      error: error instanceof Error ? error.message : 'An unexpected error occurred' 
     };
   }
 }

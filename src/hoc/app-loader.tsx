@@ -11,9 +11,8 @@ interface IProps {
 export const AppLoader = ({children}: IProps) => {
   const { data: session, status } = useSession();
   const { setAuthState, isAuth } = useAuthStore();
-  const { ingredients, loadIngredients } = useIngredientStore()
+  const { loadIngredients } = useIngredientStore()
 
-  console.log("ingredients", ingredients)
   useEffect(() => {
     setAuthState(status, session)
   }, [status, session, setAuthState])

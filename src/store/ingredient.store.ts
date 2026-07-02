@@ -32,7 +32,7 @@ export const useIngredientStore = create<IIngredientStore>((set) => ({
 			}
 		} catch(error) {
 			console.error("error", error)
-			set({ error: "Ошибка при загрузке ингредиента", isLoading: false })
+			set({ error: "Error loading ingredient", isLoading: false })
 		}
 	},
 		addIngredient: async (data: IIngredientFormData) => {
@@ -51,7 +51,7 @@ export const useIngredientStore = create<IIngredientStore>((set) => ({
 				}
 			} catch(error) {
 				console.error("error", error)
-				set({ error: "Ошибка при добавлении ингредиента", isLoading: false })
+				set({ error: "Error loading ingredient", isLoading: false })
 			}
 		},
 		removeIngredient: async (id: string) => {
@@ -70,7 +70,7 @@ export const useIngredientStore = create<IIngredientStore>((set) => ({
 				}
 			} catch(error) {
 				console.error("error", error)
-				set({ error: "Ошибка при загрузке ингредиента", isLoading: false })
+				set({ error: "Error loading ingredient", isLoading: false })
 			}
 		}
 }))

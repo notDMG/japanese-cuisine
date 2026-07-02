@@ -65,7 +65,7 @@ export const siteConf: ISiteConf = {
           Japanese cuisine is not just about food; it is a cultural experience recognized by UNESCO as an Intangible Cultural Heritage. It promotes health, longevity, and a deep appreciation for the aesthetic presentation of dishes.
         </p>
 
-        <footer class="bg-gray-50 p-6 rounded-lg text-center italic">
+        <footer class="p-6 rounded-lg text-center italic">
           GitHub notDMG
           <br>Join us as we explore the endless horizons of Japanese flavors.
         </footer>

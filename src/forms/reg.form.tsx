@@ -27,7 +27,7 @@ export default function RegisterForm() {
     }
 
     if (result?.success) {
-      alert("Регистрация успешно завершена!");
+      alert("Registration completed successfully!");
     }
   };
 
@@ -42,10 +42,10 @@ export default function RegisterForm() {
             required
             className='w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-color duration-200 text-black text-sm'
             {...register('email', {
-              required: 'Введите email',
+              required: 'Please enter your email',
               pattern: {
                 value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                message: 'Некорректный email'
+                message: 'Invalid email address'
               }
             })}
           />
@@ -61,18 +61,18 @@ export default function RegisterForm() {
             required
             className='w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-color duration-200 text-black text-sm'
             {...register('password', {
-              required: 'Введите пароль',
+              required: 'Please enter a password',
               minLength: {
                 value: 6, 
-                message: 'Пароль должен содержать минимум 6 символов'
+                message: 'Password must be at least 6 characters long'
               },
               maxLength: {
                 value: 20,
-                message: 'Пароль может содержать максимум 20 символов'
+                message: 'Password can be a maximum of 20 characters long'
               },
               pattern: {
                 value: /[a-zA-Zа-яА-ЯёЁ]/,
-                message: 'Пароль должен иметь хотя бы одну букву'
+                message: 'Password must contain at least one letter'
               }
             })}
           />
@@ -88,9 +88,9 @@ export default function RegisterForm() {
             required
             className='w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-color duration-200 text-black text-sm'
             {...register('confirmPassword', {
-              required: 'Повторите пароль',
+              required: 'Please repeat your password',
               validate: (value) => {
-                return value === getValues('password') || 'Пароли не совпадают'
+                return value === getValues('password') || 'Passwords do not match'
               }
             })}
           />

@@ -11,12 +11,12 @@ export async function signInCredentials({ email, password }: IForm) {
     });
 
     if (result?.error) {
-      return { error: "Неверный email или пароль" };
+      return { error: "Invalid email or password" };
     }
 
     return { success: true };
   } catch (error) {
     console.error('Authorization error', error);
-    return { error: "Неверный email или пароль" };
+    return { error: "Invalid email or password" };
   }
 }

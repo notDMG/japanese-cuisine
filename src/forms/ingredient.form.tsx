@@ -3,7 +3,7 @@
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { useEffect } from "react"
 import { OPTIONS_CATEGORY, UNIT_OPTIONS } from "@/constans/selectOptions"
-import { createIngredient } from '@/actions/createIngredient'
+import { useIngredientStore } from '@/store/ingredient.store'
 
 export interface IIngredientFormData {
   name: string
@@ -29,17 +29,18 @@ export function IngredientForm() {
       description: ''
     }
   })
+  const { addIngredient } = useIngredientStore()
 
   const onSubmit: SubmitHandler<IIngredientFormData> = async (formData) => {
-    
-    const result = await createIngredient(formData)
+    await addIngredient(formData)
 
-    if (result?.error) {
-      alert("Ошибка при создании ингредиента")
+    const currentError = useIngredientStore.getState().error
+    if (currentError) {
+      alert(currentError)
       return
     }
 
-    alert('Ингредиент добавлен в ДБ!')
+    alert('Ingredient added to the DB')
   }
 
   useEffect(() => {
@@ -62,12 +63,12 @@ export function IngredientForm() {
             placeholder="Banana"
             className="w-full px-4 py-2 mb-1 border text-black border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
             {...register('name', {
-              required: 'Введите название ингредиента',
+              required: 'Ingredient name is required',
               pattern: {
                 value: /^[A-Za-zА-Яа-яЁё]+$/,
-                message: 'Название должно состоять из букв'
+                message: 'Name must consist of letters only'
               },
-              minLength: { value: 2, message: 'Минимум 2 символа' }
+              minLength: { value: 2, message: 'Minimum 2 characters' }
             })}
           />
           {errors.name && <p className="text-red-500 text-xs font-bold">{errors.name.message}</p>}
@@ -79,7 +80,7 @@ export function IngredientForm() {
             <select
               className="w-full px-4 border text-black border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all py-4"
               {...register('category', {
-                required: 'Выберите категорию'
+                required: 'Please select a category'
               })}
             >
               <option value="">Select</option>
@@ -95,7 +96,7 @@ export function IngredientForm() {
             <select
               className="w-full px-4 border text-black border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all py-4"
               {...register('unit', {
-                required: 'Выберите ед.измерения'
+                required: 'Please select a unit'
               })}
             >
               <option value="">Select</option>
@@ -117,11 +118,11 @@ export function IngredientForm() {
               placeholder="0.00"
               className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 text-black outline-none"
               {...register('pricePerUnit', {
-                required: 'Укажите цену',
+                required: 'Price is required',
                 valueAsNumber: true,
                 min: {
                   value: 0.01,
-                  message: 'Цена не может быть меньше 0.01$'
+                  message: 'Price cannot be less than 0.01$'
                 }
               })}
             />
@@ -134,7 +135,7 @@ export function IngredientForm() {
           <textarea
             rows={3}
             className="w-full text-black px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 outline-none resize-none"
-            placeholder="Добавить описание..."
+            placeholder="Add description..."
             {...register('description')}
           />
         </div>
