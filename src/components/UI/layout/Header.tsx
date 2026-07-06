@@ -1,7 +1,7 @@
 'use client'
 import Menu from '@/components/UI/Menu'
 import { siteConf } from '@/config/site.conf'
-import { useAuthStore } from '@/store/auth.store'
+import { useAuthStore } from '@/store/use-auth-store'
 import Link from 'next/link'
 import { useState } from 'react'
 import Logo from '../Logo'

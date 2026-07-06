@@ -1,4 +1,4 @@
-import LoginPage from '@/forms/login.form'
+import LoginPage from '@/components/forms/LoginForm'
 import { useState } from 'react'
 import Modal from './common/Modal'
 

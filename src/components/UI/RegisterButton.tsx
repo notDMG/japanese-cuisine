@@ -1,4 +1,4 @@
-import RegisterForm from '@/forms/reg.form'
+import RegisterForm from '@/components/forms/RegisterForm'
 import { useState } from 'react'
 import Modal from './common/Modal'
 

@@ -1,7 +1,7 @@
 'use client';
 
 import Logo from '@/components/UI/Logo';
-import { signInCredentials } from '@/actions/signIn';
+import { signInCredentials } from '@/actions/auth/sign-in';
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { IForm } from '@/types/form-data'
 import { useEffect, useState } from 'react'

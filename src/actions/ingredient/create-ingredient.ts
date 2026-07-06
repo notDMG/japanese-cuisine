@@ -1,7 +1,7 @@
 'use server'
 
 import { auth } from '@/auth/auth'
-import { IIngredientFormData } from '@/forms/ingredient.form'
+import { IIngredientFormData } from '@/components/forms/IngredientForm'
 import { ingredientSchema } from '@/schema/zod'
 import { prisma } from '@/utils/prisma'
 import { ZodError } from 'zod'
@@ -21,7 +21,7 @@ export async function createIngredient(formData: IIngredientFormData) {
 			pricePerUnit: formData.pricePerUnit,
 			description: formData.description
 		}
-	 
+
 		const validatedData = ingredientSchema.parse(data)
 
 		const ingredient = await prisma.ingredient.create({
@@ -34,12 +34,12 @@ export async function createIngredient(formData: IIngredientFormData) {
 			}
 		})
 
-		return { success: true, ingredient: ingredient}
+		return { success: true, ingredient: ingredient }
 	} catch (error) {
 		if (error instanceof ZodError) {
-			return { error: error.issues.map((er) => er.message).join(', ') }
+			return { error: error.issues.map(er => er.message).join(', ') }
 		}
 		console.error('Error creating ingredient', error)
-		return { success: false, error: 'Failed to save the ingredient.'}
+		return { success: false, error: 'Failed to save the ingredient.' }
 	}
 }

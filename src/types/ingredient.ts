@@ -8,3 +8,8 @@ export interface IIngredient {
 	createdAt?: Date;
 	updatedAt?: Date
 }
+
+export type IngredientType = {
+	ingredientId: string,
+	quantity: number
+}

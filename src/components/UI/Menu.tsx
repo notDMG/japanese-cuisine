@@ -1,9 +1,9 @@
 import { siteConf } from '@/config/site.conf'
+import { useAuthStore } from '@/store/use-auth-store'
 import Link from 'next/link'
+import { LogOut } from './LogOut'
 import RegisterButton from './RegisterButton'
 import SignUpButton from './SignUpButton'
-import { useAuthStore } from '@/store/auth.store'
-import { LogOut } from './LogOut'
 
 export default function Menu({
 	isMenuOpen,
@@ -66,11 +66,14 @@ export default function Menu({
 								{item.label}
 							</Link>
 						))}
-						{isAuth ? <LogOut /> : 
-						<div className="flex flex-col space-y-3 border-gray-100 w-full p-4 bg-gray-100 rounded-lg">
-							<SignUpButton />
-							<RegisterButton />
-						</div>}						
+						{isAuth ? (
+							<LogOut />
+						) : (
+							<div className="flex flex-col space-y-3 border-gray-100 w-full p-4 bg-gray-100 rounded-lg">
+								<SignUpButton />
+								<RegisterButton />
+							</div>
+						)}
 					</div>
 				</div>
 			)}

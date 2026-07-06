@@ -1,7 +1,7 @@
 'use client';
 
 import Logo from '@/components/UI/Logo';
-import registerUser from '@/actions/register';
+import registerUser from '@/actions/auth/register-user';
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { IForm } from '@/types/form-data'
 import { useEffect, useState } from 'react' 
