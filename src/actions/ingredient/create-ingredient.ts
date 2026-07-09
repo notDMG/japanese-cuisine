@@ -2,7 +2,7 @@
 
 import { auth } from '@/auth/auth'
 import { IIngredientFormData } from '@/components/forms/IngredientForm'
-import { ingredientSchema } from '@/schema/zod'
+import { ingredientSchema } from '@/schema/ingredient'
 import { prisma } from '@/utils/prisma'
 import { ZodError } from 'zod'
 

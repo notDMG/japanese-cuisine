@@ -2,17 +2,17 @@ import { createRecipe } from '@/actions/recipe/create-recipe'
 import { deleteRecipe } from '@/actions/recipe/delete-recipe'
 import { getRecipes } from '@/actions/recipe/get-recipes'
 import { updateRecipe } from '@/actions/recipe/update-recipe'
-import { IRecipeFormData } from '@/types/recipe'
+import { IRecipe, IRecipeFormData } from '@/types/recipe'
 import { create } from 'zustand'
 
 interface IActionResult {
 	success: boolean;
-	recipe?: IRecipeFormData;
+	recipe?: IRecipe;
 	error?: string
 }
 
 interface IRecipeState {
-	recipes: IRecipeFormData[];
+	recipes: IRecipe[];
 	isLoading: boolean;
 	error: string | null; 
 	loadRecipes: () => Promise<void>;
@@ -20,7 +20,6 @@ interface IRecipeState {
 	updateRecipe: (id: string, formData: IRecipeFormData) => Promise<IActionResult>;
 	removeRecipe: (id: string) => Promise<void>
 }
-
 
 export const useRecipeStore = create<IRecipeState>((set) => ({
 	recipes: [],
