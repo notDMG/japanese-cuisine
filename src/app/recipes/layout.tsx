@@ -2,7 +2,7 @@ interface IProps {
   children: React.ReactNode
 }
 
-export default function LayotRecipes({ children }: IProps) {
+export default function LayoutRecipes({ children }: IProps) {
   return (
     <section>{ children }</section>
   )

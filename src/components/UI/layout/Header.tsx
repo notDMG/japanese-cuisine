@@ -33,7 +33,7 @@ export default function Header() {
 						))}
 					</nav>
 
-					<div className="hidden md:flex items-center justify-end min-w-[170px] h-9">
+					<div className="hidden md:flex items-center justify-end min-w-42.5 h-9">
 						{status === 'loading' ? (
 							<div className="hidden md:block h-5 w-5 animate-spin rounded-full border-3 border-solid border-orange-600 border-t-transparent mr-8"></div>
 						) : !isAuth ? (

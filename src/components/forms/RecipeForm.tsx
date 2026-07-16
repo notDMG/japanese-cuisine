@@ -15,7 +15,7 @@ const initialState: IRecipeFormData = {
   name: '',
   description: '',
   imageUrl: '',
-  ingredients: [{ ingredientId: '', quantity: 0 }]
+  ingredients: [{ ingredientId: '', quantity: 1 }]
 }
 
 export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
@@ -70,7 +70,7 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
         alert(initialRecipe ? 'Recipe updated' : 'Recipe added to the DB')
         router.push('/')
       } else {
-        setError("Could't save the recipe :(")
+        setError(result.error || "Couldn't save the recipe :(")
       }
     })
   }
@@ -102,10 +102,6 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
           <input
             {...register('name', {
               required: 'Recipe name is required',
-              pattern: {
-                value: /^[A-Za-zА-Яа-яЁё ]+$/,
-                message: 'Name must consist of letters only'
-              },
               minLength: { value: 2, message: 'Minimum 2 characters' }
             })}
             type="text"
@@ -208,6 +204,11 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
                   step="any"
                   className="w-full px-4 py-2 border text-black border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all h-10.5 text-center"
                 />
+                {errors.ingredients?.[index]?.quantity && (
+                  <p className="text-red-500 text-xs font-bold mt-1 text-center">
+                    {errors.ingredients[index]?.quantity?.message}
+                  </p>
+                )}
               </div>
 
               {fields.length > 1 && (
@@ -225,7 +226,7 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
           {fields.length < 10 && (
             <button
               type="button"
-              onClick={() => append({ ingredientId: '', quantity: 0 })}
+              onClick={() => append({ ingredientId: '', quantity: 1 })}
               className="w-full py-2 border border-dashed border-gray-300 text-sm font-semibold text-gray-600 hover:border-orange-500 hover:text-orange-500 transition rounded-md"
             >
               + Add Row Ingredient

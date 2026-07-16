@@ -1,45 +1,56 @@
 'use server'
 
-import { IngredientType } from '@/types/ingredient'
 import { IRecipeFormData } from '@/types/recipe'
 import { prisma } from '@/utils/prisma'
 
 export async function createRecipe(formData: IRecipeFormData) {
-	try {
-		const { name, description, imageUrl, ingredients } = formData
+  try {
+    const { name, description, imageUrl, ingredients } = formData
 
-		if (!name || !description || !ingredients || ingredients.length === 0) {
-			return { 
-				success: false,
-				error: "Name and at least one ingredients are required"
-			}
-		}
+    if (!name || !description || !ingredients || ingredients.length === 0) {
+      return { 
+        success: false,
+        error: "Name, description and at least one ingredient are required"
+      }
+    }
 
-		const recipe = await prisma.recipe.create({
-			data: {
-				name,
-				description,
-				imageUrl,
-				ingredients: {
-					create: ingredients.map(({ ingredientId, quantity }: IngredientType) => ({
-						ingredient: { connect: { id: ingredientId } },
-						quantity
-					}))
-				}
-			},
-			include: {
-				ingredients: {
-					include: {
-						ingredient: true
-					}
-				}
-			}
-		})
+    const cleanImageUrl = imageUrl && imageUrl.trim() !== "" ? imageUrl : null
 
-		return { success: true, recipe }
+    const recipe = await prisma.recipe.create({
+      data: {
+        name,
+        description,
+        imageUrl: cleanImageUrl,
+        ingredients: {
+          create: ingredients.map((ing) => {
+            const parsedQuantity = Number(ing.quantity)
+            
+            if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
+              throw new Error(`Invalid quantity for ingredient ${ing.ingredientId}`)
+            }
 
-	} catch(error) {
-		console.error("Recipe creating error: ", error)
-		return { success: false, error: "Recipe creating error" }
-	}
+            return {
+              ingredient: { connect: { id: ing.ingredientId } },
+              quantity: parsedQuantity 
+            }
+          })
+        }
+      },
+      include: {
+        ingredients: {
+          include: {
+            ingredient: true
+          }
+        }
+      }
+    })
+
+    return { success: true, recipe }
+
+  } catch (error: unknown) {
+    console.error("Recipe creating error details:", error)
+
+		const errorMessage = error instanceof Error ? error.message : "Recipe creating error"
+    return { success: false, error: errorMessage }
+  }
 }

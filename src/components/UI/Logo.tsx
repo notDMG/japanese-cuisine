@@ -6,7 +6,7 @@ export default function Logo() {
     <div className="flex items-center justify-center gap-3">
       
         <Image
-          src="sushi.svg"
+          src="/sushi.svg"
           alt={siteConf.description}
           width={30}
           height={30}
