@@ -4,6 +4,7 @@ import { OPTIONS_CATEGORY, UNIT_OPTIONS } from '@/constants/selectOptions'
 import { useIngredientStore } from '@/store/use-ingredient-store'
 import { useEffect } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
+import { notyf } from '../UI/toast/notifications'
 
 export interface IIngredientFormData {
 	name: string
@@ -36,11 +37,11 @@ export function IngredientForm() {
 
 		const currentError = useIngredientStore.getState().error
 		if (currentError) {
-			alert(currentError)
+			notyf.error(currentError)
 			return
 		}
 
-		alert('Ingredient added to the DB')
+		notyf.success('Ingredient added to the DB')
 	}
 
 	useEffect(() => {

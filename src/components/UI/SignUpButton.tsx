@@ -21,7 +21,10 @@ export default function SignUpButton() {
 						setIsModalOpen(false)
 					}}
 				>
-					<LoginPage />
+					<LoginPage
+						onClose={() => {
+							setIsModalOpen(false)
+						}}/>
 				</Modal>
 			)}
 		</>

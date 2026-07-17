@@ -1,4 +1,14 @@
 @import "tailwindcss";
+@import "../../node_modules/notyf/notyf.min.css";
+
+.notyf__wrapper {
+  justify-content: center !important;
+  align-items: center !important;    
+}
+
+.notyf__message {
+  text-align: center !important;     
+}
 
 @layer utilities {
   @keyframes fadeIn {
