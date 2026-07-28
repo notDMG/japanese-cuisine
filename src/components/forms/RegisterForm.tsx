@@ -2,20 +2,23 @@
 
 import registerUser from '@/actions/auth/register-user'
 import Logo from '@/components/UI/Logo'
-import { IForm } from '@/types/form-data'
-import { useEffect, useState } from 'react'
+import { IFormUser } from '@/types/user-form-data'
+import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { notyf } from '../UI/toast/notifications'
 
-export default function RegisterForm() {
-	const [signInResult, setSignInResult] = useState<null | string>(null)
+interface RegisterProps {
+	onClose: () => void
+}
+
+export default function RegisterForm({ onClose }: RegisterProps) {
 	const {
 		register,
 		handleSubmit,
 		reset,
 		getValues,
 		formState: { isSubmitSuccessful, isSubmitting, errors }
-	} = useForm<IForm>({
+	} = useForm<IFormUser>({
 		mode: 'onBlur'
 	})
 
@@ -23,19 +26,18 @@ export default function RegisterForm() {
 		if (isSubmitSuccessful) return reset()
 	}, [reset, isSubmitSuccessful])
 
-	const onSubmit: SubmitHandler<IForm> = async (data: IForm): Promise<void> => {
-		setSignInResult(null)
-
+	const onSubmit: SubmitHandler<IFormUser> = async (
+		data: IFormUser
+	): Promise<void> => {
 		const result = await registerUser(data)
 
 		if (result?.error) {
-			setSignInResult(result.error)
+			notyf.error(result.error)
 			return
 		}
 
-		if (result?.success) {
-			notyf.success('Registration completed successfully!')
-		}
+		if (onClose) onClose()
+		notyf.success('Registration completed successfully!')
 	}
 
 	return (
@@ -127,7 +129,6 @@ export default function RegisterForm() {
 					>
 						{isSubmitting ? 'LOADING...' : 'SIGN UP'}
 					</button>
-					<p className="text-red-500 text-xs font-bold">{signInResult}</p>
 				</div>
 			</form>
 		</div>

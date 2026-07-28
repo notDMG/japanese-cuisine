@@ -3,6 +3,7 @@
 import { signOutFunc } from '@/actions/auth/sign-out'
 import { useAuthStore } from '@/store/use-auth-store'
 import { useRouter } from 'next/navigation'
+import { notyf } from './toast/notifications'
 
 export function LogOut() {
 	const router = useRouter()
@@ -13,6 +14,7 @@ export function LogOut() {
 			await signOutFunc()
 			setAuthState('unauthenticated', null)
 			router.refresh()
+			notyf.success('Success')
 		} catch (error) {
 			console.error('Ошибка при выходе:', error)
 		}

@@ -2,8 +2,7 @@
 
 import { signInCredentials } from '@/actions/auth/sign-in'
 import Logo from '@/components/UI/Logo'
-import { IForm } from '@/types/form-data'
-import { useEffect, useState } from 'react'
+import { IFormUser } from '@/types/user-form-data'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { notyf } from '../UI/toast/notifications'
 
@@ -12,33 +11,33 @@ interface LoginProps {
 }
 
 export default function LoginPage({ onClose }: LoginProps) {
-	const [loginError, setLoginError] = useState<string | null>(null)
-
 	const {
 		register,
 		handleSubmit,
 		reset,
-		formState: { isSubmitting, isSubmitSuccessful, errors }
-	} = useForm<IForm>({
+		formState: { isSubmitting, errors }
+	} = useForm<IFormUser>({
 		mode: 'onBlur'
 	})
 
-	useEffect(() => {
-		if (isSubmitSuccessful) return reset()
-	}, [reset, isSubmitSuccessful])
 
-	const onSubmit: SubmitHandler<IForm> = async (data: IForm): Promise<void> => {
-		setLoginError(null)
-		const { email, password } = data
-
-		const result = await signInCredentials({ email, password })
+	const onSubmit: SubmitHandler<IFormUser> = async (
+		data: IFormUser
+	): Promise<void> => {
+		const dataClone = {
+			email: String(data.email).trim(),
+			password: String(data.password).trim()
+		}
+		
+		const result = await signInCredentials(dataClone)
 		if (result?.error) {
-			setLoginError(result.error)
+			notyf.error(result.error)
 			return
 		}
 
+		reset()
 		if (onClose) onClose()
-		notyf.success('Success!')
+		notyf.success('Welcome back!')
 	}
 
 	return (
@@ -110,7 +109,6 @@ export default function LoginPage({ onClose }: LoginProps) {
 					>
 						{isSubmitting ? 'LOADING...' : 'LOG IN'}
 					</button>
-					<p className="text-red-500 text-xs font-bold">{loginError}</p>
 				</div>
 			</form>
 		</div>

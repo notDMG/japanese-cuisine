@@ -74,9 +74,9 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
 
 			if (result.success) {
 				notyf.success(
-					initialRecipe ? 'Recipe updated' : 'Recipe added to the DB'
+					initialRecipe ? 'Recipe updated' : 'Recipe added'
 				)
-				router.push('/')
+				router.push('/recipes')
 			} else {
 				const errorMessage = result.error ?? 'Unknown error'
 				setError(errorMessage)
@@ -237,7 +237,7 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
 						<button
 							type="button"
 							onClick={() => append({ ingredientId: '', quantity: 1 })}
-							className="w-full py-2 border border-dashed border-gray-300 text-sm font-semibold text-gray-600 hover:border-orange-500 hover:text-orange-500 transition rounded-md"
+							className="w-full py-2 border border-dashed border-gray-300 text-sm font-semibold text-gray-600 hover:border-orange-500 hover:text-orange-500 transition duration-300 rounded-md"
 						>
 							+ Add Row Ingredient
 						</button>
@@ -259,7 +259,7 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
 				<button
 					type="submit"
 					disabled={isPending}
-					className="w-full bg-black text-white font-bold py-3 rounded-md hover:bg-orange-600 shadow-md uppercase tracking-wider text-sm duration-500 transition-colors disabled:bg-gray-400"
+					className="w-full bg-black text-white font-bold py-3 rounded-md hover:bg-orange-600 shadow-md uppercase tracking-wider text-sm duration-300 transition-colors disabled:bg-gray-400"
 				>
 					{isPending
 						? 'Saving...'
