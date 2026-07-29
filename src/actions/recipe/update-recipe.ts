@@ -22,6 +22,7 @@ export async function updateRecipe(id: string, formData: IRecipeFormData) {
 				description,
 				imageUrl,
 				ingredients: {
+					deleteMany: {},
 					create: ingredients.map(({ ingredientId, quantity }: IngredientType) => ({
 						ingredient: { connect: { id: ingredientId } },
 						quantity

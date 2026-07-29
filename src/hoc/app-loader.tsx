@@ -16,7 +16,7 @@ export const AppLoader = ({ children }: IProps) => {
 	const { loadRecipes } = useRecipeStore()
 
 	useEffect(() => {
-		setAuthState(status, session)
+		setAuthState(status, session || null)
 	}, [status, session, setAuthState])
 
 	useEffect(() => {

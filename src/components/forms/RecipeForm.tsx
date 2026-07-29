@@ -4,7 +4,7 @@ import { useIngredientStore } from '@/store/use-ingredient-store'
 import { useRecipeStore } from '@/store/use-recipe-store'
 import { IRecipe, IRecipeFormData } from '@/types/recipe'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState, useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import {
 	SubmitHandler,
 	useFieldArray,
@@ -37,7 +37,7 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
 		control,
 		handleSubmit,
 		reset,
-		formState: { isSubmitSuccessful, errors }
+		formState: { errors }
 	} = useForm<IRecipeFormData>({
 		mode: 'onBlur',
 		defaultValues: initialRecipe
@@ -67,7 +67,7 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
 	const onSubmit: SubmitHandler<IRecipeFormData> = data => {
 		startTransition(async () => {
 			setError(null)
-
+			
 			const result = initialRecipe
 				? await updateRecipe(initialRecipe.id, data)
 				: await addRecipe(data)
@@ -76,20 +76,17 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
 				notyf.success(
 					initialRecipe ? 'Recipe updated' : 'Recipe added'
 				)
+				if (!initialRecipe) {
+					reset(initialState)
+				}
 				router.push('/recipes')
 			} else {
 				const errorMessage = result.error ?? 'Unknown error'
 				setError(errorMessage)
-				notyf.error(`Couldn't save the recipe: ${errorMessage}`)
-			}
+				notyf.error(`Couldn't save the recipe`)
+			}			
 		})
 	}
-
-	useEffect(() => {
-		if (isSubmitSuccessful && !initialRecipe) {
-			reset(initialState)
-		}
-	}, [isSubmitSuccessful, reset, initialRecipe])
 
 	return (
 		<div className="min-w-90 max-w-120 bg-white p-8 rounded-xl shadow-xl border border-gray-100">
@@ -212,7 +209,7 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
 									})}
 									type="number"
 									step="any"
-									className="w-full px-4 py-2 border text-black border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all h-10.5 text-center"
+									className="w-full border text-black border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all h-10.5 text-center"
 								/>
 								{errors.ingredients?.[index]?.quantity && (
 									<p className="text-red-500 text-xs font-bold mt-1 text-center">
@@ -239,7 +236,7 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
 							onClick={() => append({ ingredientId: '', quantity: 1 })}
 							className="w-full py-2 border border-dashed border-gray-300 text-sm font-semibold text-gray-600 hover:border-orange-500 hover:text-orange-500 transition duration-300 rounded-md"
 						>
-							+ Add Row Ingredient
+							+ Add an ingredient field
 						</button>
 					)}
 				</div>
@@ -256,17 +253,27 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
 					/>
 				</div>
 
-				<button
-					type="submit"
-					disabled={isPending}
-					className="w-full bg-black text-white font-bold py-3 rounded-md hover:bg-orange-600 shadow-md uppercase tracking-wider text-sm duration-300 transition-colors disabled:bg-gray-400"
-				>
-					{isPending
-						? 'Saving...'
-						: initialRecipe
-							? 'Save Changes'
-							: 'Add Recipe'}
-				</button>
+				<div className="flex flex-col gap-1">
+					<button
+						type="submit"
+						disabled={isPending}
+						className="w-full bg-black text-white font-bold py-3 rounded-md hover:bg-orange-600 shadow-md uppercase tracking-wider text-sm duration-300 transition-colors disabled:bg-gray-400"
+					>
+						{isPending
+							? 'Saving...'
+							: initialRecipe
+								? 'Save Changes'
+								: 'Add Recipe'}
+					</button>
+
+					<button
+						className="w-full bg-black text-white font-bold py-3 rounded-md hover:bg-orange-600 shadow-md uppercase tracking-wider text-sm duration-300 transition-colors disabled:bg-gray-400"
+						type="button"
+						onClick={() => router.push('/recipes')}
+					>
+						CANCEL
+					</button>
+				</div>
 			</form>
 		</div>
 	)

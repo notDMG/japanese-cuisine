@@ -41,7 +41,7 @@ export function IngredientForm() {
 			return
 		}
 
-		notyf.success('Ingredient added to the DB')
+		notyf.success('The ingredient was added')
 	}
 
 	useEffect(() => {

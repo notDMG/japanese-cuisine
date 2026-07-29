@@ -14,6 +14,7 @@ interface IActionResult {
 interface IRecipeState {
 	recipes: IRecipe[];
 	isLoading: boolean;
+	hasLoaded: boolean;
 	error: string | null; 
 	loadRecipes: () => Promise<void>;
 	addRecipe: (formData: IRecipeFormData) => Promise<IActionResult>;
@@ -24,6 +25,7 @@ interface IRecipeState {
 export const useRecipeStore = create<IRecipeState>((set) => ({
 	recipes: [],
 	isLoading: false,
+	hasLoaded: false,
 	error: null,
 	loadRecipes: async () => {
 		set({ isLoading: true, error: null })
@@ -32,13 +34,13 @@ export const useRecipeStore = create<IRecipeState>((set) => ({
 			const result = await getRecipes()
 
 			if (result.success) {
-				set({ recipes: result.recipes, isLoading: false })
+				set({ recipes: result.recipes, isLoading: false, hasLoaded: true})
 			} else {
-				set({ error: result.error, isLoading: false,  })
+				set({ error: result.error, isLoading: false, hasLoaded: true})
 			}
 		} catch(error) {
 			console.error("Error: ", error)
-			set({ error: "Error loading recipes", isLoading: false })
+			set({ error: "Error loading recipes", isLoading: false, hasLoaded: true })
 		}
 	},
 	addRecipe: async (data: IRecipeFormData) => {

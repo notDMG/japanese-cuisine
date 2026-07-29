@@ -5,12 +5,18 @@ import Logo from '@/components/UI/Logo'
 import { IFormUser } from '@/types/user-form-data'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { notyf } from '../UI/toast/notifications'
+import { getSession } from 'next-auth/react'
+import { useAuthStore } from '@/store/use-auth-store'
+import { useRouter } from 'next/navigation'
 
 interface LoginProps {
 	onClose?: () => void
 }
 
 export default function LoginPage({ onClose }: LoginProps) {
+	const {setAuthState} = useAuthStore()
+	const router = useRouter()
+	
 	const {
 		register,
 		handleSubmit,
@@ -34,6 +40,10 @@ export default function LoginPage({ onClose }: LoginProps) {
 			notyf.error(result.error)
 			return
 		}
+
+		const updatedSession = await getSession()
+		setAuthState('authenticated', updatedSession)
+		router.refresh()
 
 		reset()
 		if (onClose) onClose()

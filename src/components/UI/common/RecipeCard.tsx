@@ -12,7 +12,7 @@ interface RecipeCardProps {
   recipe: IRecipe;
 }
 
-export function RecipeCard({ recipe }: RecipeCardProps) {
+export default function RecipeCard({ recipe }: RecipeCardProps) {
   const { removeRecipe } = useRecipeStore();
   const { isAuth } = useAuthStore();
   const [isPending, startTransition] = useTransition();
@@ -87,7 +87,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
             disabled={isPending}
             className="px-4 py-2 text-sm font-bold text-red-500 border border-transparent rounded-md hover:bg-red-50 transition-colors duration-300 disabled:text-gray-400"
           >
-            {isPending ? "Удаление..." : "Удалить"}
+            {isPending ? "Deleting..." : "Delete"}
           </button>
         </div>
       )}

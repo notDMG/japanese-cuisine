@@ -3,7 +3,7 @@
 import { useRecipeStore } from "@/store/use-recipe-store";
 import { useAuthStore } from "@/store/use-auth-store";
 import Link from "next/link";
-import { RecipeCard } from '@/components/UI/common/RecipeCard'
+import RecipeCard from '@/components/UI/common/RecipeCard'
 import SignUpButton from '@/components/UI/SignUpButton'
 
 export default function RecipesPage() {
