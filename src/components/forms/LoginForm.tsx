@@ -4,7 +4,7 @@ import { signInCredentials } from '@/actions/auth/sign-in'
 import Logo from '@/components/UI/Logo'
 import { IFormUser } from '@/types/user-form-data'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { notyf } from '../UI/toast/notifications'
+import { toast } from 'sonner'
 import { getSession } from 'next-auth/react'
 import { useAuthStore } from '@/store/use-auth-store'
 import { useRouter } from 'next/navigation'
@@ -37,7 +37,10 @@ export default function LoginPage({ onClose }: LoginProps) {
 		
 		const result = await signInCredentials(dataClone)
 		if (result?.error) {
-			notyf.error(result.error)
+			toast.error(result.error, {
+				duration: 6000,
+				icon: '💢'
+			})
 			return
 		}
 
@@ -47,7 +50,11 @@ export default function LoginPage({ onClose }: LoginProps) {
 
 		reset()
 		if (onClose) onClose()
-		notyf.success('Welcome back!')
+		toast.success(`Welcome back!`, {
+			description: 'Great to see you again. What are we cooking today?',
+			duration: 4000,
+			icon: '💮'
+		})
 	}
 
 	return (

@@ -5,7 +5,7 @@ import Logo from '@/components/UI/Logo'
 import { IFormUser } from '@/types/user-form-data'
 import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { notyf } from '../UI/toast/notifications'
+import { toast } from 'sonner'
 
 interface RegisterProps {
 	onClose: () => void
@@ -32,12 +32,20 @@ export default function RegisterForm({ onClose }: RegisterProps) {
 		const result = await registerUser(data)
 
 		if (result?.error) {
-			notyf.error(result.error)
+			toast.error(result.error, {
+				duration: 6000,
+				icon: '💢'
+			})
 			return
 		}
 
 		if (onClose) onClose()
-		notyf.success('Registration completed successfully!')
+		 toast.success(`You are welcome!`, {
+				description:
+					'Your account has been created. Start your culinary journey!',
+				duration: 4000,
+				icon: '💮'
+			})
 	}
 
 	return (

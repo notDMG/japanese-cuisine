@@ -11,7 +11,7 @@ import {
 	useForm,
 	useWatch
 } from 'react-hook-form'
-import { notyf } from '../UI/toast/notifications'
+import { toast } from 'sonner'
 
 interface RecipeFormProps {
 	initialRecipe?: IRecipe
@@ -73,8 +73,12 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
 				: await addRecipe(data)
 
 			if (result.success) {
-				notyf.success(
-					initialRecipe ? 'Recipe updated' : 'Recipe added'
+				toast.success(
+					initialRecipe ? `${initialRecipe.name} updated` : 'Recipe added',
+					{
+						duration: 4000,
+						icon: '🍜'
+					}
 				)
 				if (!initialRecipe) {
 					reset(initialState)
@@ -83,7 +87,10 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
 			} else {
 				const errorMessage = result.error ?? 'Unknown error'
 				setError(errorMessage)
-				notyf.error(`Couldn't save the recipe`)
+				toast.error(`Couldn't save the recipe`, {
+					duration: 6000,
+					icon: '💢'
+				})
 			}			
 		})
 	}

@@ -4,7 +4,7 @@ import { OPTIONS_CATEGORY, UNIT_OPTIONS } from '@/constants/selectOptions'
 import { useIngredientStore } from '@/store/use-ingredient-store'
 import { useEffect } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
-import { notyf } from '../UI/toast/notifications'
+import { toast } from 'sonner'
 
 export interface IIngredientFormData {
 	name: string
@@ -37,11 +37,18 @@ export function IngredientForm() {
 
 		const currentError = useIngredientStore.getState().error
 		if (currentError) {
-			notyf.error(currentError)
+			toast.error(currentError, {
+				duration: 6000,
+				icon: '💢'
+			})
 			return
 		}
 
-		notyf.success('The ingredient was added')
+		toast.success(`Ingredient ${formData.name} added`, {
+			description: 'A fresh product has joined your pantry!',
+			duration: 4000,
+			icon: '🥬'
+		})
 	}
 
 	useEffect(() => {

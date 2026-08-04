@@ -3,7 +3,7 @@
 import { signOutFunc } from '@/actions/auth/sign-out'
 import { useAuthStore } from '@/store/use-auth-store'
 import { useRouter } from 'next/navigation'
-import { notyf } from './toast/notifications'
+import { toast } from 'sonner'
 
 export function LogOut() {
 	const router = useRouter()
@@ -14,8 +14,15 @@ export function LogOut() {
 			await signOutFunc()
 			setAuthState('unauthenticated', null)
 			router.refresh()
-			notyf.success('Success')
+			toast.success('You have logged out of your account', {
+				duration: 4000,
+				icon: '💮'
+			})
 		} catch (error) {
+			toast.error('Error on exit', {
+				duration: 6000,
+				icon: '💢'
+			})
 			console.error('Ошибка при выходе:', error)
 		}
 	}
