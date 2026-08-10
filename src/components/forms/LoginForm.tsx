@@ -2,12 +2,13 @@
 
 import { signInCredentials } from '@/actions/auth/sign-in'
 import Logo from '@/components/UI/Logo'
-import { IFormUser } from '@/types/user-form-data'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { getSession } from 'next-auth/react'
 import { useAuthStore } from '@/store/use-auth-store'
 import { useRouter } from 'next/navigation'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { signInSchema, type SignInInput } from '@/schema/sign-in'
 
 interface LoginProps {
   onClose?: () => void
@@ -22,19 +23,14 @@ export default function LoginPage({ onClose }: LoginProps) {
     handleSubmit,
     reset,
     formState: { isSubmitting, errors },
-  } = useForm<IFormUser>({
+  } = useForm<SignInInput>({
+    resolver: zodResolver(signInSchema),
     mode: 'onBlur',
   })
 
-  const onSubmit: SubmitHandler<IFormUser> = async (
-    data: IFormUser
-  ): Promise<void> => {
-    const dataClone = {
-      email: String(data.email).trim(),
-      password: String(data.password).trim(),
-    }
+  const onSubmit: SubmitHandler<SignInInput> = async (data) => {
+    const result = await signInCredentials(data)
 
-    const result = await signInCredentials(dataClone)
     if (result?.error) {
       toast.error(result.error, {
         duration: 6000,
@@ -49,7 +45,8 @@ export default function LoginPage({ onClose }: LoginProps) {
 
     reset()
     if (onClose) onClose()
-    toast.success(`Welcome back!`, {
+
+    toast.success('Welcome back!', {
       description: 'Great to see you again. What are we cooking today?',
       duration: 4000,
       icon: '💮',
@@ -65,16 +62,8 @@ export default function LoginPage({ onClose }: LoginProps) {
           <label className="mb-1 block text-[14px] text-black">Email</label>
           <input
             type="email"
-            required
-            title=""
             className="transition-color w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-black duration-200 focus:ring-1 focus:ring-orange-500 focus:outline-none"
-            {...register('email', {
-              required: 'Please enter your email',
-              pattern: {
-                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                message: 'Invalid email address',
-              },
-            })}
+            {...register('email')}
           />
           {errors.email && (
             <p className="text-xs font-bold text-red-500">
@@ -87,24 +76,8 @@ export default function LoginPage({ onClose }: LoginProps) {
           <label className="mb-1 block text-[14px] text-black">Password</label>
           <input
             type="password"
-            required
-            title=""
             className="transition-color w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-black duration-200 focus:ring-1 focus:ring-orange-500 focus:outline-none"
-            {...register('password', {
-              required: 'Please enter a password',
-              minLength: {
-                value: 6,
-                message: 'Password must be at least 6 characters long',
-              },
-              maxLength: {
-                value: 20,
-                message: 'Password can be a maximum of 20 characters long',
-              },
-              pattern: {
-                value: /[a-zA-Zа-яА-ЯёЁ]/,
-                message: 'Password must contain at least one letter',
-              },
-            })}
+            {...register('password')}
           />
           {errors.password && (
             <p className="text-xs font-bold text-red-500">

@@ -1,14 +1,15 @@
 'use client'
 
-import registerUser from '@/actions/auth/register-user'
-import Logo from '@/components/UI/Logo'
-import { IFormUser } from '@/types/user-form-data'
-import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { registerSchema, type RegisterInput } from '@/schema/register'
+import Logo from '@/components/UI/Logo'
 import { toast } from 'sonner'
+import registerUser from '@/actions/auth/register-user'
+import { ActionResult } from '@/types/action-result'
 
 interface RegisterProps {
-  onClose: () => void
+  onClose?: () => void
 }
 
 export default function RegisterForm({ onClose }: RegisterProps) {
@@ -16,22 +17,19 @@ export default function RegisterForm({ onClose }: RegisterProps) {
     register,
     handleSubmit,
     reset,
-    getValues,
-    formState: { isSubmitSuccessful, isSubmitting, errors },
-  } = useForm<IFormUser>({
+    formState: { isSubmitting, errors },
+  } = useForm<RegisterInput>({
+    resolver: zodResolver(registerSchema),
     mode: 'onBlur',
   })
 
-  useEffect(() => {
-    if (isSubmitSuccessful) return reset()
-  }, [reset, isSubmitSuccessful])
-
-  const onSubmit: SubmitHandler<IFormUser> = async (
-    data: IFormUser
+  const onSubmit: SubmitHandler<RegisterInput> = async (
+    data: RegisterInput
   ): Promise<void> => {
-    const result = await registerUser(data)
+    const { confirmPassword, ...payload } = data
+    const result: ActionResult = await registerUser(payload)
 
-    if (result?.error) {
+    if ('error' in result) {
       toast.error(result.error, {
         duration: 6000,
         icon: '💢',
@@ -40,31 +38,28 @@ export default function RegisterForm({ onClose }: RegisterProps) {
     }
 
     if (onClose) onClose()
+
     toast.success(`You are welcome!`, {
       description:
         'Your account has been created. Start your culinary journey!',
       duration: 4000,
       icon: '💮',
     })
+
+    reset()
   }
 
   return (
     <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-lg">
       <Logo />
+
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
         <div>
           <label className="mb-1 block text-[14px] text-black">Email</label>
           <input
             type="email"
-            required
             className="transition-color w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-black duration-200 focus:ring-1 focus:ring-orange-500 focus:outline-none"
-            {...register('email', {
-              required: 'Please enter your email',
-              pattern: {
-                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                message: 'Invalid email address',
-              },
-            })}
+            {...register('email')}
           />
           {errors.email && (
             <p className="text-xs font-bold text-red-500">
@@ -77,23 +72,8 @@ export default function RegisterForm({ onClose }: RegisterProps) {
           <label className="mb-1 block text-[14px] text-black">Password</label>
           <input
             type="password"
-            required
             className="transition-color w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-black duration-200 focus:ring-1 focus:ring-orange-500 focus:outline-none"
-            {...register('password', {
-              required: 'Please enter a password',
-              minLength: {
-                value: 6,
-                message: 'Password must be at least 6 characters long',
-              },
-              maxLength: {
-                value: 20,
-                message: 'Password can be a maximum of 20 characters long',
-              },
-              pattern: {
-                value: /[a-zA-Zа-яА-ЯёЁ]/,
-                message: 'Password must contain at least one letter',
-              },
-            })}
+            {...register('password')}
           />
           {errors.password && (
             <p className="text-xs font-bold text-red-500">
@@ -108,16 +88,8 @@ export default function RegisterForm({ onClose }: RegisterProps) {
           </label>
           <input
             type="password"
-            required
             className="transition-color w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-black duration-200 focus:ring-1 focus:ring-orange-500 focus:outline-none"
-            {...register('confirmPassword', {
-              required: 'Please repeat your password',
-              validate: (value) => {
-                return (
-                  value === getValues('password') || 'Passwords do not match'
-                )
-              },
-            })}
+            {...register('confirmPassword')}
           />
           {errors.confirmPassword && (
             <p className="text-xs font-bold text-red-500">
@@ -129,7 +101,8 @@ export default function RegisterForm({ onClose }: RegisterProps) {
         <div className="flex flex-col items-center gap-1">
           <button
             type="submit"
-            className="rounded-lg border-2 border-orange-400 px-4 py-2 font-bold text-black shadow-md transition-all duration-200 hover:bg-orange-400 hover:text-white"
+            disabled={isSubmitting}
+            className="rounded-lg border-2 border-orange-400 px-4 py-2 font-bold text-black shadow-md transition-all duration-200 hover:bg-orange-400 hover:text-white disabled:opacity-50"
           >
             {isSubmitting ? 'LOADING...' : 'SIGN UP'}
           </button>

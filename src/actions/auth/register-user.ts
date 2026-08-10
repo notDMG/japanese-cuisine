@@ -1,17 +1,14 @@
 'use server'
-import { IFormUser } from '@/types/user-form-data'
-import { saltAndHashPassword } from '@/utils/password'
+
 import { prisma } from '@/utils/prisma'
+import { saltAndHashPassword } from '@/utils/password'
+import { IFormUser } from '@/types/user-form-data'
+import { ActionResult } from '@/types/action-result'
 
-export default async function registerUser(form: IFormUser) {
-  const { email, password, confirmPassword } = form
-
-  if (password !== confirmPassword) {
-    return { error: 'Passwords do not match' }
-  }
-
-  if (password.length < 6)
-    return { error: 'The password must contain at least 6 characters' }
+export default async function registerUser(
+  form: IFormUser
+): Promise<ActionResult> {
+  const { email, password } = form
 
   try {
     const existingUser = await prisma.user.findUnique({
@@ -26,7 +23,7 @@ export default async function registerUser(form: IFormUser) {
 
     await prisma.user.create({
       data: {
-        email: email,
+        email,
         password: pwHash,
       },
     })
