@@ -12,5 +12,5 @@ export const UNIT_OPTIONS = [
   { value: 'KILOGRAMS', label: 'Kilograms' },
   { value: 'MILLILITERS', label: 'Milliliters' },
   { value: 'LITERS', label: 'Liters' },
-  { value: 'PIECES', label: 'Pieces' }
+  { value: 'PIECES', label: 'Pieces' },
 ]

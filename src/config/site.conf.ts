@@ -1,42 +1,43 @@
 interface TItem {
-  label: string,
+  label: string
   href: string
 }
 
 interface IContent {
-  content: string;
+  content: string
 }
 
 interface ITableContent {
-  name: string;
-  category: string;
-  unit: string;
-  pricePerUnit: string;
-  description: string;
+  name: string
+  category: string
+  unit: string
+  pricePerUnit: string
+  description: string
   action: string
 }
 
 interface ISiteConf {
-  title: string;
-  description: string;
-  navItems: TItem[];
-  pageContent: Record<string, IContent>,
+  title: string
+  description: string
+  navItems: TItem[]
+  pageContent: Record<string, IContent>
   tableContent: ITableContent
 }
 
-export const siteConf: ISiteConf = { 
+export const siteConf: ISiteConf = {
   title: 'Japanese food',
   description: 'Cool Japanese food',
-  navItems : [
+  navItems: [
     { label: 'Recipes', href: '/recipes' },
     { label: 'Ingredients', href: '/ingredients' },
     { label: 'About Us', href: '/about' },
   ],
   pageContent: {
-    '/': {content: ''},
-    '/recipes': {content: ''},
-    '/ingredients': {content: ''},
-    '/about': {content: `
+    '/': { content: '' },
+    '/recipes': { content: '' },
+    '/ingredients': { content: '' },
+    '/about': {
+      content: `
       <section class="max-w-4xl mx-auto p-6 text-gray-800">
         <h1 class="text-3xl font-bold text-orange-600 mb-6">About Our Japanese Culinary Journey</h1>
         
@@ -70,7 +71,8 @@ export const siteConf: ISiteConf = {
           <br>Join us as we explore the endless horizons of Japanese flavors.
         </footer>
       </section>
-    `},
+    `,
+    },
   },
   tableContent: {
     name: 'Name',
@@ -78,6 +80,6 @@ export const siteConf: ISiteConf = {
     unit: 'Unit',
     pricePerUnit: 'Price per unit',
     description: 'Description',
-    action: 'Action'
-  }
+    action: 'Action',
+  },
 }

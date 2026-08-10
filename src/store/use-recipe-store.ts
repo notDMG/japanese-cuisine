@@ -6,108 +6,109 @@ import { IRecipe, IRecipeFormData } from '@/types/recipe'
 import { create } from 'zustand'
 
 interface IActionResult {
-	success: boolean;
-	recipe?: IRecipe;
-	error?: string
+  success: boolean
+  recipe?: IRecipe
+  error?: string
 }
 
 interface IRecipeState {
-	recipes: IRecipe[];
-	isLoading: boolean;
-	hasLoaded: boolean;
-	error: string | null; 
-	loadRecipes: () => Promise<void>;
-	addRecipe: (formData: IRecipeFormData) => Promise<IActionResult>;
-	updateRecipe: (id: string, formData: IRecipeFormData) => Promise<IActionResult>;
-	removeRecipe: (id: string) => Promise<void>
+  recipes: IRecipe[]
+  isLoading: boolean
+  hasLoaded: boolean
+  error: string | null
+  loadRecipes: () => Promise<void>
+  addRecipe: (formData: IRecipeFormData) => Promise<IActionResult>
+  updateRecipe: (
+    id: string,
+    formData: IRecipeFormData
+  ) => Promise<IActionResult>
+  removeRecipe: (id: string) => Promise<void>
 }
 
 export const useRecipeStore = create<IRecipeState>((set) => ({
-	recipes: [],
-	isLoading: false,
-	hasLoaded: false,
-	error: null,
-	loadRecipes: async () => {
-		set({ isLoading: true, error: null })
-		 
-		try {
-			const result = await getRecipes()
+  recipes: [],
+  isLoading: false,
+  hasLoaded: false,
+  error: null,
+  loadRecipes: async () => {
+    set({ isLoading: true, error: null })
 
-			if (result.success) {
-				set({ recipes: result.recipes, isLoading: false, hasLoaded: true})
-			} else {
-				set({ error: result.error, isLoading: false, hasLoaded: true})
-			}
-		} catch(error) {
-			console.error("Error: ", error)
-			set({ error: "Error loading recipes", isLoading: false, hasLoaded: true })
-		}
-	},
-	addRecipe: async (data: IRecipeFormData) => {
-		set({ isLoading: true, error: null })
+    try {
+      const result = await getRecipes()
 
-		try {
-			const result = await createRecipe(data)
+      if (result.success) {
+        set({ recipes: result.recipes, isLoading: false, hasLoaded: true })
+      } else {
+        set({ error: result.error, isLoading: false, hasLoaded: true })
+      }
+    } catch (error) {
+      console.error('Error: ', error)
+      set({ error: 'Error loading recipes', isLoading: false, hasLoaded: true })
+    }
+  },
+  addRecipe: async (data: IRecipeFormData) => {
+    set({ isLoading: true, error: null })
 
-			if (result.success) {
-				set((state) => ({
-					isLoading: false,
-					recipes: [...state.recipes, result.recipe!],
-				}))
-				return { success: true, recipe: result.recipe }
-			} else {
-				set({ error: result.error, isLoading: false })
-				return { success: false, error: result.error }
-			}
+    try {
+      const result = await createRecipe(data)
 
-		} catch(error) {
-			console.error("Error: ", error)
-			set({ isLoading: false, error: "Error adding recipe" })
-			return { success: false, error: "Error adding recipe" }
-		}
-	},
-	updateRecipe: async (id: string, formData: IRecipeFormData) => {
-		set({ isLoading: true, error: null })
+      if (result.success) {
+        set((state) => ({
+          isLoading: false,
+          recipes: [...state.recipes, result.recipe!],
+        }))
+        return { success: true, recipe: result.recipe }
+      } else {
+        set({ error: result.error, isLoading: false })
+        return { success: false, error: result.error }
+      }
+    } catch (error) {
+      console.error('Error: ', error)
+      set({ isLoading: false, error: 'Error adding recipe' })
+      return { success: false, error: 'Error adding recipe' }
+    }
+  },
+  updateRecipe: async (id: string, formData: IRecipeFormData) => {
+    set({ isLoading: true, error: null })
 
-		try {
-			const result = await updateRecipe(id, formData)
-			
-			if (result.success) {
-				set((state) => ({
-					recipes: state.recipes.map((recipe) => 
-						recipe.id === id ? result.recipe! : recipe
-					),
-					isLoading: false
-				}))
-				return { success: true, recipe: result.recipe }
-			} else {
-				set({ isLoading: false, error: result.error })
-				return { success: false, error: result.error }
-			}
-		} catch(error) {
-			console.error("Error: ", error)
-			set({ error: "Error updating recipe", isLoading: false })
-			return { success: false, error: "Error updating recipe" }
-		}
-	},
-	removeRecipe: async (id: string) => {
-		set({ isLoading: true, error: null })
+    try {
+      const result = await updateRecipe(id, formData)
 
-		try {
-			const result = await deleteRecipe(id)
+      if (result.success) {
+        set((state) => ({
+          recipes: state.recipes.map((recipe) =>
+            recipe.id === id ? result.recipe! : recipe
+          ),
+          isLoading: false,
+        }))
+        return { success: true, recipe: result.recipe }
+      } else {
+        set({ isLoading: false, error: result.error })
+        return { success: false, error: result.error }
+      }
+    } catch (error) {
+      console.error('Error: ', error)
+      set({ error: 'Error updating recipe', isLoading: false })
+      return { success: false, error: 'Error updating recipe' }
+    }
+  },
+  removeRecipe: async (id: string) => {
+    set({ isLoading: true, error: null })
 
-			if (result.success) {
-				set((state) => ({
-					recipes: state.recipes.filter((recipe) => recipe.id !== id),
-					isLoading: false
-				}))			
-			} else {
-				set({ isLoading: false, error: result.error})
-			}
+    try {
+      const result = await deleteRecipe(id)
 
-		} catch(error) {
-			console.error("Error: ", error)
-			set({ isLoading: false, error: "Error deleting recipe" })
-		}
-	}
+      if (result.success) {
+        set((state) => ({
+          recipes: state.recipes.filter((recipe) => recipe.id !== id),
+          isLoading: false,
+        }))
+      } else {
+        set({ isLoading: false, error: result.error })
+      }
+    } catch (error) {
+      console.error('Error: ', error)
+      set({ isLoading: false, error: 'Error deleting recipe' })
+    }
+  },
 }))

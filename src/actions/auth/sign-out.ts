@@ -1,6 +1,6 @@
 'use server'
 
-import { signOut } from "@/auth/auth"
+import { signOut } from '@/auth/auth'
 
 export async function signOutFunc() {
   try {

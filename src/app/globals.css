@@ -1,13 +1,12 @@
-@import "tailwindcss";
-@import "../../node_modules/notyf/notyf.min.css";
+@import 'tailwindcss';
 
 .notyf__wrapper {
   justify-content: center !important;
-  align-items: center !important;    
+  align-items: center !important;
 }
 
 .notyf__message {
-  text-align: center !important;     
+  text-align: center !important;
 }
 
 @layer utilities {

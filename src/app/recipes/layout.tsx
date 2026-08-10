@@ -3,7 +3,5 @@ interface IProps {
 }
 
 export default function LayoutRecipes({ children }: IProps) {
-  return (
-    <section>{ children }</section>
-  )
+  return <section>{children}</section>
 }
