@@ -31,7 +31,7 @@ export default function LoginPage({ onClose }: LoginProps) {
   const onSubmit: SubmitHandler<SignInInput> = async (data) => {
     const result = await signInCredentials(data)
 
-    if (result?.error) {
+    if ('error' in result) {
       toast.error(result.error, {
         duration: 6000,
         icon: '💢',
@@ -90,7 +90,7 @@ export default function LoginPage({ onClose }: LoginProps) {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="rounded-lg border-2 border-orange-400 px-4 py-2 font-bold text-black shadow-md transition-all duration-200 hover:bg-orange-400 hover:text-white"
+            className="rounded-lg border-2 border-orange-400 px-4 py-2 font-bold text-black shadow-md transition-all duration-200 hover:bg-orange-400 hover:text-white disabled:opacity-50"
           >
             {isSubmitting ? 'LOADING...' : 'LOG IN'}
           </button>

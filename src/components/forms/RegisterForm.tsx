@@ -2,11 +2,11 @@
 
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { registerSchema, type RegisterInput } from '@/schema/register'
+import { registerFormSchema, type RegisterFormInput } from '@/schema/register'
 import Logo from '@/components/UI/Logo'
 import { toast } from 'sonner'
 import registerUser from '@/actions/auth/register-user'
-import { ActionResult } from '@/types/action-result'
+import type { ActionResult } from '@/types/action-result'
 
 interface RegisterProps {
   onClose?: () => void
@@ -18,14 +18,14 @@ export default function RegisterForm({ onClose }: RegisterProps) {
     handleSubmit,
     reset,
     formState: { isSubmitting, errors },
-  } = useForm<RegisterInput>({
-    resolver: zodResolver(registerSchema),
+  } = useForm<RegisterFormInput>({
+    resolver: zodResolver(registerFormSchema),
     mode: 'onBlur',
   })
 
-  const onSubmit: SubmitHandler<RegisterInput> = async (
-    data: RegisterInput
-  ): Promise<void> => {
+  const onSubmit: SubmitHandler<RegisterFormInput> = async (
+    data: RegisterFormInput
+  ) => {
     const { confirmPassword, ...payload } = data
     const result: ActionResult = await registerUser(payload)
 
@@ -37,6 +37,7 @@ export default function RegisterForm({ onClose }: RegisterProps) {
       return
     }
 
+    reset()
     if (onClose) onClose()
 
     toast.success(`You are welcome!`, {
@@ -45,8 +46,6 @@ export default function RegisterForm({ onClose }: RegisterProps) {
       duration: 4000,
       icon: '💮',
     })
-
-    reset()
   }
 
   return (

@@ -2,13 +2,22 @@
 
 import { prisma } from '@/utils/prisma'
 import { saltAndHashPassword } from '@/utils/password'
-import { IFormUser } from '@/types/user-form-data'
-import { ActionResult } from '@/types/action-result'
+import { registerFieldsSchema } from '@/schema/register'
+import type { ActionResult } from '@/types/action-result'
 
 export default async function registerUser(
-  form: IFormUser
+  form: unknown
 ): Promise<ActionResult> {
-  const { email, password } = form
+  const parsed = registerFieldsSchema
+    .pick({ email: true, password: true })
+    .safeParse(form)
+
+  if (!parsed.success) {
+    const firstError = parsed.error.issues[0]?.message || 'Invalid input data'
+    return { error: firstError }
+  }
+
+  const { email, password } = parsed.data
 
   try {
     const existingUser = await prisma.user.findUnique({
