@@ -6,7 +6,7 @@ import { prisma } from '@/utils/prisma'
 export async function getIngredient() {
   const session = await auth()
 
-  if (!session || !session.user) {
+  if (!session?.user) {
     return { success: false, error: 'Access denied. Please log in.' }
   }
 
@@ -15,6 +15,6 @@ export async function getIngredient() {
     return { success: true, ingredients }
   } catch (error) {
     console.error('Error retrieving ingredients', error)
-    return { error: 'Error retrieving ingredients' }
+    return { success: false, error: 'Error retrieving ingredients' }
   }
 }

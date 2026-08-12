@@ -1,44 +1,30 @@
 'use server'
 
 import { auth } from '@/auth/auth'
-import { IIngredientFormData } from '@/components/forms/IngredientForm'
 import { ingredientSchema } from '@/schema/ingredient'
 import { prisma } from '@/utils/prisma'
-import { ZodError } from 'zod'
 
-export async function createIngredient(formData: IIngredientFormData) {
+export async function createIngredient(formData: unknown) {
   const session = await auth()
 
-  if (!session || !session.user) {
+  if (!session?.user) {
     return { success: false, error: 'Access denied. Please log in.' }
   }
 
+  const parsed = ingredientSchema.safeParse(formData)
+
+  if (!parsed.success) {
+    const firstError = parsed.error.issues[0]?.message || 'Invalid input data'
+    return { success: false, error: firstError }
+  }
+
   try {
-    const data = {
-      name: formData.name,
-      category: formData.category,
-      unit: formData.unit,
-      pricePerUnit: formData.pricePerUnit,
-      description: formData.description,
-    }
-
-    const validatedData = ingredientSchema.parse(data)
-
     const ingredient = await prisma.ingredient.create({
-      data: {
-        name: validatedData.name,
-        category: validatedData.category,
-        unit: validatedData.unit,
-        pricePerUnit: validatedData.pricePerUnit,
-        description: validatedData.description,
-      },
+      data: parsed.data,
     })
 
-    return { success: true, ingredient: ingredient }
+    return { success: true, ingredient }
   } catch (error) {
-    if (error instanceof ZodError) {
-      return { error: error.issues.map((er) => er.message).join(', ') }
-    }
     console.error('Error creating ingredient', error)
     return { success: false, error: 'Failed to save the ingredient.' }
   }

@@ -6,8 +6,12 @@ import { prisma } from '@/utils/prisma'
 export async function deleteIngredient(id: string) {
   const session = await auth()
 
-  if (!session || !session.user) {
+  if (!session?.user) {
     return { success: false, error: 'Access denied. Please log in.' }
+  }
+
+  if (!id || typeof id !== 'string') {
+    return { success: false, error: 'Invalid ingredient ID' }
   }
 
   try {
@@ -17,6 +21,6 @@ export async function deleteIngredient(id: string) {
     return { success: true, ingredient }
   } catch (error) {
     console.error('Error deleting ingredient', error)
-    return { error: 'Error deleting ingredient' }
+    return { success: false, error: 'Error deleting ingredient' }
   }
 }
