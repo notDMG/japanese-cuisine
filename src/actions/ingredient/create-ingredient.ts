@@ -2,20 +2,23 @@
 
 import { auth } from '@/auth/auth'
 import { ingredientSchema } from '@/schema/ingredient'
+import { ActionIngredientResult } from '@/types/action-result'
 import { prisma } from '@/utils/prisma'
 
-export async function createIngredient(formData: unknown) {
+export async function createIngredient(
+  formData: unknown
+): Promise<ActionIngredientResult> {
   const session = await auth()
 
   if (!session?.user) {
-    return { success: false, error: 'Access denied. Please log in.' }
+    return { error: 'Access denied. Please log in.' }
   }
 
   const parsed = ingredientSchema.safeParse(formData)
 
   if (!parsed.success) {
     const firstError = parsed.error.issues[0]?.message || 'Invalid input data'
-    return { success: false, error: firstError }
+    return { error: firstError }
   }
 
   try {
@@ -26,6 +29,6 @@ export async function createIngredient(formData: unknown) {
     return { success: true, ingredient }
   } catch (error) {
     console.error('Error creating ingredient', error)
-    return { success: false, error: 'Failed to save the ingredient.' }
+    return { error: 'Failed to save the ingredient.' }
   }
 }

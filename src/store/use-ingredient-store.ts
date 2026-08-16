@@ -1,12 +1,12 @@
 import { createIngredient } from '@/actions/ingredient/create-ingredient'
 import { deleteIngredient } from '@/actions/ingredient/delete-ingredient'
-import { getIngredient } from '@/actions/ingredient/get-ingredients'
+import { getIngredients } from '@/actions/ingredient/get-ingredients'
 import { IIngredientFormData } from '@/components/forms/IngredientForm'
-import { IIngredient } from '@/types/ingredient'
+import { Ingredient } from '@/generated/prisma'
 import { create } from 'zustand'
 
 interface IIngredientStore {
-  ingredients: IIngredient[]
+  ingredients: Ingredient[]
   isLoading: boolean
   error: string | null
   loadIngredients: () => Promise<void>
@@ -23,9 +23,9 @@ export const useIngredientStore = create<IIngredientStore>((set) => ({
     set({ isLoading: true, error: null })
 
     try {
-      const result = await getIngredient()
+      const result = await getIngredients()
 
-      if (result.success) {
+      if ('success' in result) {
         set({ ingredients: result.ingredients, isLoading: false })
       } else {
         set({ error: result.error, isLoading: false })
@@ -41,12 +41,12 @@ export const useIngredientStore = create<IIngredientStore>((set) => ({
     try {
       const result = await createIngredient(data)
 
-      if (result.success && result.ingredient) {
+      if ('success' in result && result.ingredient) {
         set((state) => ({
           ingredients: [...state.ingredients, result.ingredient],
           isLoading: false,
         }))
-      } else {
+      } else if ('error' in result) {
         set({ error: result.error, isLoading: false })
       }
     } catch (error) {
@@ -60,7 +60,7 @@ export const useIngredientStore = create<IIngredientStore>((set) => ({
     try {
       const result = await deleteIngredient(id)
 
-      if (result.success) {
+      if ('success' in result) {
         set((state) => ({
           ingredients: state.ingredients.filter(
             (ingredient) => ingredient.id !== id

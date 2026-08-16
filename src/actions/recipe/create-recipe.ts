@@ -1,41 +1,39 @@
 'use server'
 
-import { IRecipeFormData } from '@/types/recipe'
+import { auth } from '@/auth/auth'
+import { recipeSchema } from '@/schema/recipe'
+import { UpdateRecipeResult } from '@/types/recipe'
 import { prisma } from '@/utils/prisma'
 
-export async function createRecipe(formData: IRecipeFormData) {
+export async function createRecipe(
+  formData: unknown
+): Promise<UpdateRecipeResult> {
+  const session = await auth()
+
+  if (!session?.user) {
+    return { error: 'Access denied. Please log in' }
+  }
+
+  const parsed = recipeSchema.safeParse(formData)
+
+  if (!parsed.success) {
+    const firstError = parsed.error.issues[0]?.message
+    return { error: firstError }
+  }
+
   try {
-    const { name, description, imageUrl, ingredients } = formData
-
-    if (!name || !description || !ingredients || ingredients.length === 0) {
-      return {
-        success: false,
-        error: 'Name, description and at least one ingredient are required',
-      }
-    }
-
-    const cleanImageUrl = imageUrl && imageUrl.trim() !== '' ? imageUrl : null
+    const { name, description, imageUrl, ingredients } = parsed.data
 
     const recipe = await prisma.recipe.create({
       data: {
         name,
         description,
-        imageUrl: cleanImageUrl,
+        imageUrl: imageUrl || null,
         ingredients: {
-          create: ingredients.map((ing) => {
-            const parsedQuantity = Number(ing.quantity)
-
-            if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
-              throw new Error(
-                `Invalid quantity for ingredient ${ing.ingredientId}`
-              )
-            }
-
-            return {
-              ingredient: { connect: { id: ing.ingredientId } },
-              quantity: parsedQuantity,
-            }
-          }),
+          create: ingredients.map(({ ingredientId, quantity }) => ({
+            ingredient: { connect: { id: ingredientId } },
+            quantity,
+          })),
         },
       },
       include: {
@@ -48,11 +46,8 @@ export async function createRecipe(formData: IRecipeFormData) {
     })
 
     return { success: true, recipe }
-  } catch (error: unknown) {
-    console.error('Recipe creating error details:', error)
-
-    const errorMessage =
-      error instanceof Error ? error.message : 'Recipe creating error'
-    return { success: false, error: errorMessage }
+  } catch (error) {
+    console.error('Recipe creating error:', error)
+    return { error: 'Failed to create recipe' }
   }
 }

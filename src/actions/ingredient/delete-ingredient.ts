@@ -1,17 +1,20 @@
 'use server'
 
 import { auth } from '@/auth/auth'
+import { ActionIngredientResult } from '@/types/action-result'
 import { prisma } from '@/utils/prisma'
 
-export async function deleteIngredient(id: string) {
+export async function deleteIngredient(
+  id: string
+): Promise<ActionIngredientResult> {
   const session = await auth()
 
   if (!session?.user) {
-    return { success: false, error: 'Access denied. Please log in.' }
+    return { error: 'Access denied. Please log in.' }
   }
 
-  if (!id || typeof id !== 'string') {
-    return { success: false, error: 'Invalid ingredient ID' }
+  if (!id) {
+    return { error: 'Invalid ingredient ID' }
   }
 
   try {
@@ -21,6 +24,6 @@ export async function deleteIngredient(id: string) {
     return { success: true, ingredient }
   } catch (error) {
     console.error('Error deleting ingredient', error)
-    return { success: false, error: 'Error deleting ingredient' }
+    return { error: 'Error deleting ingredient' }
   }
 }

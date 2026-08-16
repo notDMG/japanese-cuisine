@@ -1,19 +1,33 @@
 'use server'
 
-import { IngredientType } from '@/types/ingredient'
-import { IRecipeFormData } from '@/types/recipe'
+import { auth } from '@/auth/auth'
+import { recipeSchema } from '@/schema/recipe'
 import { prisma } from '@/utils/prisma'
+import { UpdateRecipeResult } from '@/types/recipe'
 
-export async function updateRecipe(id: string, formData: IRecipeFormData) {
+export async function updateRecipe(
+  id: string,
+  formData: unknown
+): Promise<UpdateRecipeResult> {
+  const session = await auth()
+
+  if (!session?.user) {
+    return { error: 'Access denied. Please log in.' }
+  }
+
+  if (!id) {
+    return { error: 'Invalid recipe ID' }
+  }
+
+  const parsed = recipeSchema.safeParse(formData)
+
+  if (!parsed.success) {
+    const firstError = parsed.error.issues[0]?.message || 'Invalid input data'
+    return { error: firstError }
+  }
+
   try {
-    const { name, description, imageUrl, ingredients } = formData
-
-    if (!name || !description || !ingredients || ingredients.length === 0) {
-      return {
-        success: false,
-        error: 'Name, description, and at least one ingredient are required',
-      }
-    }
+    const { name, description, imageUrl, ingredients } = parsed.data
 
     const recipe = await prisma.recipe.update({
       where: { id },
@@ -23,12 +37,10 @@ export async function updateRecipe(id: string, formData: IRecipeFormData) {
         imageUrl,
         ingredients: {
           deleteMany: {},
-          create: ingredients.map(
-            ({ ingredientId, quantity }: IngredientType) => ({
-              ingredient: { connect: { id: ingredientId } },
-              quantity,
-            })
-          ),
+          create: ingredients.map(({ ingredientId, quantity }) => ({
+            ingredient: { connect: { id: ingredientId } },
+            quantity,
+          })),
         },
       },
       include: {
@@ -39,9 +51,10 @@ export async function updateRecipe(id: string, formData: IRecipeFormData) {
         },
       },
     })
+
     return { success: true, recipe }
   } catch (error) {
-    console.error('Updating recipe error: ', error)
-    return { success: false, error: 'Updating recipe error: ' }
+    console.error('Updating recipe error:', error)
+    return { error: 'Failed to update recipe' }
   }
 }

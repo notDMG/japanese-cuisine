@@ -1,4 +1,4 @@
-import { IIngredient } from './ingredient'
+import { Ingredient, Recipe } from '@/generated/prisma'
 
 export interface IRecipeIngredientInput {
   ingredientId: string
@@ -17,7 +17,7 @@ export interface IRecipeIngredient {
   recipeId: string
   ingredientId: string
   quantity: number
-  ingredient: IIngredient
+  ingredient: Ingredient
 }
 
 export interface IRecipe {
@@ -27,3 +27,6 @@ export interface IRecipe {
   imageUrl?: string | null
   ingredients: IRecipeIngredient[]
 }
+
+export type UpdateRecipeResult =
+  { success: true; recipe: Recipe } | { error: string }

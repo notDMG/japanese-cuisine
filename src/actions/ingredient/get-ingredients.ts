@@ -1,13 +1,17 @@
 'use server'
 
 import { auth } from '@/auth/auth'
+import { Ingredient } from '@/generated/prisma'
 import { prisma } from '@/utils/prisma'
 
-export async function getIngredient() {
+type GetIngredientResult =
+  { success: true; ingredients: Ingredient[] } | { error: string }
+
+export async function getIngredients(): Promise<GetIngredientResult> {
   const session = await auth()
 
   if (!session?.user) {
-    return { success: false, error: 'Access denied. Please log in.' }
+    return { error: 'Access denied. Please log in.' }
   }
 
   try {
@@ -15,6 +19,6 @@ export async function getIngredient() {
     return { success: true, ingredients }
   } catch (error) {
     console.error('Error retrieving ingredients', error)
-    return { success: false, error: 'Error retrieving ingredients' }
+    return { error: 'Error retrieving ingredients' }
   }
 }
