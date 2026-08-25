@@ -2,13 +2,13 @@
 
 import { auth } from '@/auth/auth'
 import { recipeSchema } from '@/schema/recipe'
+import { RecipeActionResult } from '@/types/recipe'
 import { prisma } from '@/utils/prisma'
-import { UpdateRecipeResult } from '@/types/recipe'
 
 export async function updateRecipe(
   id: string,
   formData: unknown
-): Promise<UpdateRecipeResult> {
+): Promise<RecipeActionResult> {
   const session = await auth()
 
   if (!session?.user) {

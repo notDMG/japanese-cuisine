@@ -28,5 +28,5 @@ export interface IRecipe {
   ingredients: IRecipeIngredient[]
 }
 
-export type UpdateRecipeResult =
+export type RecipeActionResult =
   { success: true; recipe: Recipe } | { error: string }

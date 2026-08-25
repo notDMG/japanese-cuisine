@@ -7,16 +7,7 @@ export const recipeIngredientSchema = z.object({
 
   quantity: z
     .number({ error: 'Quantity is required' })
-    .positive({ message: 'Quantity must be greater than 0' })
-    .or(
-      z.string().transform((val) => {
-        const parsed = parseFloat(val)
-        if (isNaN(parsed) || parsed <= 0) {
-          throw new Error('Quantity must be a positive number')
-        }
-        return parsed
-      })
-    ),
+    .positive({ message: 'Quantity must be greater than 0' }),
 })
 
 export const recipeSchema = z.object({

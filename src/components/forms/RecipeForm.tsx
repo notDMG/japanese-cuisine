@@ -2,7 +2,8 @@
 
 import { useIngredientStore } from '@/store/use-ingredient-store'
 import { useRecipeStore } from '@/store/use-recipe-store'
-import { IRecipe, IRecipeFormData } from '@/types/recipe'
+import { recipeSchema, type RecipeInput } from '@/schema/recipe'
+import type { IRecipe } from '@/types/recipe'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 import {
@@ -11,13 +12,14 @@ import {
   useForm,
   useWatch,
 } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 
 interface RecipeFormProps {
   initialRecipe?: IRecipe
 }
 
-const initialState: IRecipeFormData = {
+const initialState: RecipeInput = {
   name: '',
   description: '',
   imageUrl: '',
@@ -37,14 +39,15 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
     control,
     handleSubmit,
     reset,
-    formState: { errors },
-  } = useForm<IRecipeFormData>({
+    formState: { errors, isSubmitting },
+  } = useForm<RecipeInput>({
+    resolver: zodResolver(recipeSchema),
     mode: 'onBlur',
     defaultValues: initialRecipe
       ? {
           name: initialRecipe.name,
           description: initialRecipe.description,
-          imageUrl: initialRecipe.imageUrl,
+          imageUrl: initialRecipe.imageUrl ?? '',
           ingredients: initialRecipe.ingredients.map((ing) => ({
             ingredientId: ing.ingredientId,
             quantity: ing.quantity,
@@ -64,7 +67,7 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
   })
   const isImagePreviewVisible = watchedImageUrl && !errors.imageUrl
 
-  const onSubmit: SubmitHandler<IRecipeFormData> = (data) => {
+  const onSubmit: SubmitHandler<RecipeInput> = (data) => {
     startTransition(async () => {
       setError(null)
 
@@ -72,25 +75,17 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
         ? await updateRecipe(initialRecipe.id, data)
         : await addRecipe(data)
 
-      if (result.success) {
+      if (result.success === true) {
         toast.success(
           initialRecipe ? `${initialRecipe.name} updated` : 'Recipe added',
-          {
-            duration: 4000,
-            icon: '🍜',
-          }
+          { duration: 4000, icon: '🍜' }
         )
-        if (!initialRecipe) {
-          reset(initialState)
-        }
+        if (!initialRecipe) reset(initialState)
         router.push('/recipes')
       } else {
         const errorMessage = result.error ?? 'Unknown error'
         setError(errorMessage)
-        toast.error(`Couldn't save the recipe`, {
-          duration: 6000,
-          icon: '💢',
-        })
+        toast.error(`Couldn't save the recipe`, { duration: 6000, icon: '💢' })
       }
     })
   }
@@ -101,7 +96,7 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
         {initialRecipe ? 'Edit Recipe' : 'New Recipe'}
       </h2>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
         {error && (
           <p className="text-center text-sm font-bold text-red-500">{error}</p>
         )}
@@ -111,10 +106,7 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
             Recipe Name
           </label>
           <input
-            {...register('name', {
-              required: 'Recipe name is required',
-              minLength: { value: 2, message: 'Minimum 2 characters' },
-            })}
+            {...register('name')}
             type="text"
             className="w-full rounded-md border border-gray-300 px-4 py-2 text-black transition-all outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
           />
@@ -130,13 +122,7 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
             Image URL
           </label>
           <input
-            {...register('imageUrl', {
-              pattern: {
-                value: /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp)(?:\?.*)?)$/i,
-                message:
-                  'Please enter a valid image URL (png, jpg, jpeg, gif, webp)',
-              },
-            })}
+            {...register('imageUrl')}
             type="text"
             placeholder="https://example.com/image.jpg"
             className="w-full rounded-md border border-gray-300 px-4 py-2 text-black transition-all outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
@@ -171,9 +157,7 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
             <div key={field.id} className="flex items-start gap-3">
               <div className="flex-1">
                 <select
-                  {...register(`ingredients.${index}.ingredientId` as const, {
-                    required: 'Select an ingredient',
-                  })}
+                  {...register(`ingredients.${index}.ingredientId`)}
                   className="h-10.5 w-full rounded-md border border-gray-300 px-4 py-2 text-black transition-all outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
                 >
                   <option value="">Select ingredient</option>
@@ -192,18 +176,8 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
 
               <div className="w-15">
                 <input
-                  {...register(`ingredients.${index}.quantity` as const, {
-                    required: 'Required',
+                  {...register(`ingredients.${index}.quantity`, {
                     valueAsNumber: true,
-                    onChange: (e) => {
-                      const val = e.target.value
-                      if (val.startsWith('0') && val.length > 1) {
-                        e.target.value = val.replace(/^0+/, '')
-                      }
-                    },
-                    validate: {
-                      positive: (val) => val > 0 || 'Specify the quantity',
-                    },
                   })}
                   type="number"
                   step="any"
@@ -249,12 +223,17 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
             placeholder="Add recipe steps or description..."
             className="w-full resize-none rounded-md border border-gray-300 px-4 py-2 text-black transition-all outline-none focus:ring-2 focus:ring-orange-500"
           />
+          {errors.description && (
+            <p className="mt-1 text-xs font-bold text-red-500">
+              {errors.description.message}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-col gap-1">
           <button
             type="submit"
-            disabled={isPending}
+            disabled={isPending || isSubmitting}
             className="w-full rounded-md bg-black py-3 text-sm font-bold tracking-wider text-white uppercase shadow-md transition-colors duration-300 hover:bg-orange-600 disabled:bg-gray-400"
           >
             {isPending
