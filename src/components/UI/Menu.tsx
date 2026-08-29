@@ -54,7 +54,7 @@ export default function Menu({
       </button>
 
       {isMenuOpen && (
-        <div className="absolute top-full right-0 left-0 mt-2 rounded-lg border border-gray-100 bg-white py-4 shadow-lg">
+        <div className="absolute top-full right-0 left-0 rounded-lg border border-gray-300 bg-white py-4 shadow-lg">
           <div className="flex flex-col space-y-2 px-4">
             {siteConf.navItems.map((item) => (
               <Link
