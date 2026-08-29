@@ -1,61 +1,51 @@
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import { OPTIONS_CATEGORY, UNIT_OPTIONS } from '@/constants/selectOptions'
 import { useIngredientStore } from '@/store/use-ingredient-store'
-import { useEffect } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
-
-export interface IIngredientFormData {
-  name: string
-  category: string
-  unit: string
-  pricePerUnit: number | null
-  description?: string
-}
+import { IngredientInput, ingredientSchema } from '@/schema/ingredient'
 
 export function IngredientForm() {
+  const { addIngredient } = useIngredientStore()
+
   const {
     register,
     handleSubmit,
     reset,
-    formState: { isSubmitSuccessful, isSubmitting, errors },
-  } = useForm<IIngredientFormData>({
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<IngredientInput>({
+    resolver: zodResolver(ingredientSchema),
     mode: 'onBlur',
     defaultValues: {
       name: '',
-      category: '',
-      unit: '',
+      category: undefined,
+      unit: undefined,
       pricePerUnit: null,
       description: '',
     },
   })
-  const { addIngredient } = useIngredientStore()
 
-  const onSubmit: SubmitHandler<IIngredientFormData> = async (formData) => {
-    await addIngredient(formData)
+  const onSubmit: SubmitHandler<IngredientInput> = async (formData) => {
+    try {
+      await addIngredient(formData)
 
-    const currentError = useIngredientStore.getState().error
-    if (currentError) {
-      toast.error(currentError, {
-        duration: 6000,
-        icon: '💢',
+      toast.success(`Ingredient ${formData.name} added`, {
+        description: 'A fresh product has joined your pantry!',
+        duration: 4000,
+        icon: '🥬',
       })
-      return
-    }
 
-    toast.success(`Ingredient ${formData.name} added`, {
-      description: 'A fresh product has joined your pantry!',
-      duration: 4000,
-      icon: '🥬',
-    })
-  }
-
-  useEffect(() => {
-    if (isSubmitSuccessful) {
       reset()
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Failed to add ingredient'
+      setError('root', { message })
+      toast.error(message, { duration: 6000, icon: '💢' })
     }
-  }, [isSubmitSuccessful, reset])
+  }
 
   return (
     <div className="min-w-90 rounded-xl border border-gray-100 bg-white p-8 shadow-xl">
@@ -63,7 +53,13 @@ export function IngredientForm() {
         New Ingredient
       </h2>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
+        {errors.root && (
+          <p className="text-center text-sm font-bold text-red-500">
+            {errors.root.message}
+          </p>
+        )}
+
         <div>
           <label className="mb-1 block text-sm font-semibold text-black">
             Ingredient Name
@@ -72,14 +68,7 @@ export function IngredientForm() {
             type="text"
             placeholder="Banana"
             className="mb-1 w-full rounded-md border border-gray-300 px-4 py-2 text-black transition-all outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
-            {...register('name', {
-              required: 'Ingredient name is required',
-              pattern: {
-                value: /^[A-Za-zА-Яа-яЁё]+$/,
-                message: 'Name must consist of letters only',
-              },
-              minLength: { value: 2, message: 'Minimum 2 characters' },
-            })}
+            {...register('name')}
           />
           {errors.name && (
             <p className="text-xs font-bold text-red-500">
@@ -95,9 +84,7 @@ export function IngredientForm() {
             </label>
             <select
               className="w-full rounded-md border border-gray-300 px-4 py-4 text-black transition-all outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
-              {...register('category', {
-                required: 'Please select a category',
-              })}
+              {...register('category')}
             >
               <option value="">Select</option>
               {OPTIONS_CATEGORY.map((category) => (
@@ -119,9 +106,7 @@ export function IngredientForm() {
             </label>
             <select
               className="w-full rounded-md border border-gray-300 px-4 py-4 text-black transition-all outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
-              {...register('unit', {
-                required: 'Please select a unit',
-              })}
+              {...register('unit')}
             >
               <option value="">Select</option>
               {UNIT_OPTIONS.map((unit) => (
@@ -150,12 +135,7 @@ export function IngredientForm() {
               placeholder="0.00"
               className="w-full rounded-md border border-gray-300 py-2 pr-4 pl-8 text-black outline-none focus:ring-2 focus:ring-orange-500"
               {...register('pricePerUnit', {
-                required: 'Price is required',
-                valueAsNumber: true,
-                min: {
-                  value: 0.01,
-                  message: 'Price cannot be less than 0.01$',
-                },
+                setValueAs: (v) => (v === '' ? null : Number(v)),
               })}
             />
           </div>

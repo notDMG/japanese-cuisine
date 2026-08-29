@@ -1,8 +1,8 @@
 import { createIngredient } from '@/actions/ingredient/create-ingredient'
 import { deleteIngredient } from '@/actions/ingredient/delete-ingredient'
 import { getIngredients } from '@/actions/ingredient/get-ingredients'
-import { IIngredientFormData } from '@/components/forms/IngredientForm'
 import { Ingredient } from '@/generated/prisma'
+import { IngredientInput } from '@/schema/ingredient'
 import { create } from 'zustand'
 
 interface IIngredientStore {
@@ -10,7 +10,7 @@ interface IIngredientStore {
   isLoading: boolean
   error: string | null
   loadIngredients: () => Promise<void>
-  addIngredient: (data: IIngredientFormData) => Promise<void>
+  addIngredient: (data: IngredientInput) => Promise<void>
   removeIngredient: (id: string) => Promise<void>
 }
 
@@ -35,7 +35,7 @@ export const useIngredientStore = create<IIngredientStore>((set) => ({
       set({ error: 'Error loading ingredient', isLoading: false })
     }
   },
-  addIngredient: async (data: IIngredientFormData) => {
+  addIngredient: async (data: IngredientInput) => {
     set({ isLoading: true, error: null })
 
     try {

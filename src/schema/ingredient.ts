@@ -3,7 +3,10 @@ import { z } from 'zod'
 export const ingredientSchema = z.object({
   name: z
     .string({ error: 'Name is required' })
-    .min(1, { message: 'Name is required' }),
+    .min(2, { message: 'Minimum 2 characters' })
+    .regex(/^[A-Za-zА-Яа-яЁё\s]+$/, {
+      message: 'Name must consist of letters only',
+    }),
 
   category: z.enum(
     ['VEGETABLES', 'FRUITS', 'MEAT', 'DAIRY', 'SPICES', 'OTHER'],
@@ -16,7 +19,8 @@ export const ingredientSchema = z.object({
 
   pricePerUnit: z
     .number({ error: 'Price is required' })
-    .nonnegative({ message: 'Price cannot be negative' }),
+    .positive({ message: 'Price must be greater than 0' })
+    .nullable(),
 
   description: z.string().optional(),
 })

@@ -5,7 +5,6 @@ import { useRecipeStore } from '@/store/use-recipe-store'
 import { recipeSchema, type RecipeInput } from '@/schema/recipe'
 import type { IRecipe } from '@/types/recipe'
 import { useRouter } from 'next/navigation'
-import { useState, useTransition } from 'react'
 import {
   SubmitHandler,
   useFieldArray,
@@ -27,8 +26,6 @@ const initialState: RecipeInput = {
 }
 
 export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
-  const [error, setError] = useState<string | null>(null)
-  const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
   const { ingredients: availableIngredients } = useIngredientStore()
@@ -39,6 +36,7 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
     control,
     handleSubmit,
     reset,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<RecipeInput>({
     resolver: zodResolver(recipeSchema),
@@ -67,27 +65,23 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
   })
   const isImagePreviewVisible = watchedImageUrl && !errors.imageUrl
 
-  const onSubmit: SubmitHandler<RecipeInput> = (data) => {
-    startTransition(async () => {
-      setError(null)
+  const onSubmit: SubmitHandler<RecipeInput> = async (data) => {
+    const result = initialRecipe
+      ? await updateRecipe(initialRecipe.id, data)
+      : await addRecipe(data)
 
-      const result = initialRecipe
-        ? await updateRecipe(initialRecipe.id, data)
-        : await addRecipe(data)
-
-      if (result.success === true) {
-        toast.success(
-          initialRecipe ? `${initialRecipe.name} updated` : 'Recipe added',
-          { duration: 4000, icon: '🍜' }
-        )
-        if (!initialRecipe) reset(initialState)
-        router.push('/recipes')
-      } else {
-        const errorMessage = result.error ?? 'Unknown error'
-        setError(errorMessage)
-        toast.error(`Couldn't save the recipe`, { duration: 6000, icon: '💢' })
-      }
-    })
+    if (result.success === true) {
+      toast.success(
+        initialRecipe ? `${initialRecipe.name} updated` : 'Recipe added',
+        { duration: 4000, icon: '🍜' }
+      )
+      if (!initialRecipe) reset(initialState)
+      router.push('/recipes')
+    } else {
+      const errorMessage = result.error ?? 'Unknown error'
+      setError('root', { message: errorMessage })
+      toast.error(errorMessage, { duration: 6000, icon: '💢' })
+    }
   }
 
   return (
@@ -97,8 +91,10 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
       </h2>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
-        {error && (
-          <p className="text-center text-sm font-bold text-red-500">{error}</p>
+        {errors.root && (
+          <p className="text-center text-sm font-bold text-red-500">
+            {errors.root.message}
+          </p>
         )}
 
         <div>
@@ -177,7 +173,7 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
               <div className="w-15">
                 <input
                   {...register(`ingredients.${index}.quantity`, {
-                    valueAsNumber: true,
+                    setValueAs: (v) => (v === '' ? null : Number(v)),
                   })}
                   type="number"
                   step="any"
@@ -233,10 +229,10 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
         <div className="flex flex-col gap-1">
           <button
             type="submit"
-            disabled={isPending || isSubmitting}
+            disabled={isSubmitting}
             className="w-full rounded-md bg-black py-3 text-sm font-bold tracking-wider text-white uppercase shadow-md transition-colors duration-300 hover:bg-orange-600 disabled:bg-gray-400"
           >
-            {isPending
+            {isSubmitting
               ? 'Saving...'
               : initialRecipe
                 ? 'Save Changes'
