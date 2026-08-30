@@ -34,7 +34,7 @@ export function IngredientsTable() {
 
   return (
     <div className="mt-5 w-full">
-      <div className="mx-2 grid grid-cols-1 gap-3 sm:grid-cols-2 md:hidden">
+      <div className="mx-2 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-8 md:hidden">
         {ingredients.map((ingredient) => (
           <div
             key={ingredient.id}
@@ -79,7 +79,7 @@ export function IngredientsTable() {
               <button
                 onClick={() => handleDelete(ingredient.id)}
                 disabled={isLoading}
-                className="mt-4 rounded-xl border border-red-200 bg-red-50 px-10 py-2 font-bold text-red-600 transition-colors hover:bg-red-100 disabled:opacity-50"
+                className="h-10 items-center justify-center rounded-xl border border-red-300 px-4 font-bold text-red-600 transition-colors hover:border-red-500 hover:bg-red-500 hover:text-white disabled:opacity-50"
               >
                 Delete
               </button>
@@ -133,7 +133,7 @@ export function IngredientsTable() {
                     <button
                       onClick={() => handleDelete(ingredient.id)}
                       disabled={isLoading}
-                      className="rounded-xl px-3 py-2 font-bold text-red-600 transition-colors hover:bg-red-600 hover:text-white"
+                      className="rounded-xl px-4 py-2 font-bold text-red-600 transition-colors hover:bg-red-600 hover:text-white"
                     >
                       Delete
                     </button>

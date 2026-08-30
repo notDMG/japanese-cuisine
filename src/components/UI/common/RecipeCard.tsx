@@ -33,7 +33,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
   }
 
   return (
-    <div className="flex h-120 w-full max-w-md min-w-63.5 flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
+    <div className="flex h-120 w-full max-w-md min-w-70 flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
       <div className="h-48 overflow-hidden p-4 pb-0">
         {recipe.imageUrl ? (
           <div className="group relative h-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md transition-all hover:shadow-lg">
@@ -87,7 +87,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
           <button
             onClick={handleDelete}
             disabled={isPending}
-            className="rounded-md border border-transparent px-4 py-2 text-sm font-bold text-red-500 transition-colors duration-300 hover:bg-red-50 disabled:text-gray-400"
+            className="h-10 items-center justify-center rounded-xl border border-red-300 px-4 font-bold text-red-600 transition-colors hover:border-red-500 hover:bg-red-500 hover:text-white disabled:opacity-50"
           >
             {isPending ? 'Deleting...' : 'Delete'}
           </button>
