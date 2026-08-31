@@ -6,6 +6,7 @@ import { useIngredientStore } from '@/store/use-ingredient-store'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
 import { IngredientInput, ingredientSchema } from '@/schema/ingredient'
+import { useAuthStore } from '@/store/use-auth-store'
 
 export function IngredientForm() {
   const { addIngredient } = useIngredientStore()
@@ -28,7 +29,15 @@ export function IngredientForm() {
     },
   })
 
+  const { isAuth } = useAuthStore()
+
   const onSubmit: SubmitHandler<IngredientInput> = async (formData) => {
+    if (!isAuth) {
+      const message = 'Please log in'
+      setError('root', { message })
+      toast.error(message, { duration: 6000, icon: '🔒' })
+      return
+    }
     try {
       await addIngredient(formData)
 
@@ -54,12 +63,6 @@ export function IngredientForm() {
       </h2>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
-        {errors.root && (
-          <p className="text-center text-sm font-bold text-red-500">
-            {errors.root.message}
-          </p>
-        )}
-
         <div>
           <label className="mb-1 block text-sm font-semibold text-black">
             Ingredient Name
