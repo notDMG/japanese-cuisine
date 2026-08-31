@@ -126,7 +126,9 @@ export function IngredientsTable() {
                   {ingredient.unit}
                 </td>
                 <td className="px-6 py-4 font-semibold whitespace-nowrap text-gray-900 italic">
-                  {ingredient.pricePerUnit} $
+                  {ingredient.pricePerUnit
+                    ? `${ingredient.pricePerUnit} $`
+                    : 'Price not listed'}
                 </td>
                 <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
                   {isAuth && (

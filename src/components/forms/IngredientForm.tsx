@@ -135,7 +135,8 @@ export function IngredientForm() {
               placeholder="0.00"
               className="w-full rounded-md border border-gray-300 py-2 pr-4 pl-8 text-black outline-none focus:ring-2 focus:ring-orange-500"
               {...register('pricePerUnit', {
-                setValueAs: (v) => (v === '' ? null : Number(v)),
+                setValueAs: (v) =>
+                  v === '' || v === null || isNaN(Number(v)) ? null : Number(v),
               })}
             />
           </div>
