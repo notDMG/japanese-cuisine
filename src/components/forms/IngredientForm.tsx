@@ -7,53 +7,53 @@ import { useForm, type SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
 import { IngredientInput, ingredientSchema } from '@/schema/ingredient'
 import { useAuthStore } from '@/store/use-auth-store'
+import { useState } from 'react'
+
+const defaultValues = {
+  name: '',
+  category: undefined,
+  unit: undefined,
+  pricePerUnit: null,
+  description: '',
+}
 
 export function IngredientForm() {
+  const [formKey, setFormKey] = useState(0)
   const { addIngredient } = useIngredientStore()
+  const { isAuth } = useAuthStore()
 
   const {
     register,
     handleSubmit,
-    reset,
-    setError,
     formState: { errors, isSubmitting },
   } = useForm<IngredientInput>({
     resolver: zodResolver(ingredientSchema),
     mode: 'onBlur',
-    defaultValues: {
-      name: '',
-      category: undefined,
-      unit: undefined,
-      pricePerUnit: null,
-      description: '',
-    },
+    defaultValues,
   })
-
-  const { isAuth } = useAuthStore()
 
   const onSubmit: SubmitHandler<IngredientInput> = async (formData) => {
     if (!isAuth) {
-      const message = 'Please log in'
-      setError('root', { message })
-      toast.error(message, { duration: 6000, icon: '🔒' })
+      toast.error('Please log in', { duration: 6000, icon: '🔒' })
       return
     }
-    try {
-      await addIngredient(formData)
 
-      toast.success(`Ingredient ${formData.name} added`, {
-        description: 'A fresh product has joined your pantry!',
-        duration: 4000,
-        icon: '🥬',
-      })
+    await addIngredient(formData)
 
-      reset()
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to add ingredient'
-      setError('root', { message })
-      toast.error(message, { duration: 6000, icon: '💢' })
+    const latestError = useIngredientStore.getState().error
+
+    if (latestError) {
+      toast.error(latestError, { duration: 6000, icon: '💢' })
+      return
     }
+
+    toast.success(`Ingredient ${formData.name} added`, {
+      description: 'A fresh product has joined your pantry!',
+      duration: 4000,
+      icon: '🥬',
+    })
+
+    setFormKey((prev) => prev + 1)
   }
 
   return (
@@ -62,7 +62,12 @@ export function IngredientForm() {
         New Ingredient
       </h2>
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
+      <form
+        key={formKey}
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        className="space-y-5"
+      >
         <div>
           <label className="mb-1 block text-sm font-semibold text-black">
             Ingredient Name

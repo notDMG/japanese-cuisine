@@ -72,7 +72,7 @@ export const useIngredientStore = create<IIngredientStore>((set) => ({
       }
     } catch (error) {
       console.error('error', error)
-      set({ error: 'Error loading ingredient', isLoading: false })
+      set({ error: 'Error removing ingredient', isLoading: false })
     }
   },
 }))
