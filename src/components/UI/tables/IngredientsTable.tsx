@@ -111,7 +111,7 @@ export function IngredientsTable() {
           </thead>
 
           <tbody className="divide-y divide-gray-200 bg-white">
-            {ingredients.map((ingredient) => (
+            {ingredients.toReversed().map((ingredient) => (
               <tr
                 key={ingredient.id}
                 className="transition-colors hover:bg-gray-50"
@@ -126,9 +126,13 @@ export function IngredientsTable() {
                   {ingredient.unit}
                 </td>
                 <td className="px-6 py-4 font-semibold whitespace-nowrap text-gray-900 italic">
-                  {ingredient.pricePerUnit
-                    ? `${ingredient.pricePerUnit} $`
-                    : 'Price not listed'}
+                  {ingredient.pricePerUnit ? (
+                    `${ingredient.pricePerUnit} $`
+                  ) : (
+                    <p className="text-[14px] text-gray-500">
+                      Price not listed
+                    </p>
+                  )}
                 </td>
                 <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
                   {isAuth && (
