@@ -22,12 +22,9 @@ export const AppLoader = ({ children }: IProps) => {
   useEffect(() => {
     if (isAuth) {
       loadIngredients()
+      loadRecipes()
     }
-  }, [isAuth, loadIngredients])
-
-  useEffect(() => {
-    loadRecipes()
-  }, [loadRecipes])
+  }, [isAuth, loadIngredients, loadRecipes])
 
   return <>{children}</>
 }

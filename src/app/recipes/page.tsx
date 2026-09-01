@@ -1,16 +1,20 @@
 'use client'
 
 import { useRecipeStore } from '@/store/use-recipe-store'
-import { useAuthStore } from '@/store/use-auth-store'
 import Link from 'next/link'
 import RecipeCard from '@/components/UI/common/RecipeCard'
 import SignUpButton from '@/components/UI/SignUpButton'
+import { useSession } from 'next-auth/react'
 
 export default function RecipesPage() {
   const { recipes, isLoading, error } = useRecipeStore()
-  const { isAuth } = useAuthStore()
+  const { status } = useSession()
 
-  if (!isAuth) {
+  if (status === 'loading') {
+    return <p className="py-12 text-center text-gray-500">Loading...</p>
+  }
+
+  if (status !== 'authenticated') {
     return (
       <div className="flex h-96 flex-col items-center justify-center px-4 text-black">
         <h2 className="mb-2 text-xl font-bold">Access restricted</h2>
@@ -23,7 +27,7 @@ export default function RecipesPage() {
   }
 
   if (isLoading) {
-    return <p className="py-12 text-center text-gray-500">loading...</p>
+    return <p className="py-12 text-center text-gray-500">Loading recipes...</p>
   }
 
   if (error) {
