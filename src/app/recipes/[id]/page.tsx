@@ -1,24 +1,37 @@
-'use client'
-
+// app/recipes/[id]/page.tsx
+import { auth } from '@/auth/auth'
+import { prisma } from '@/utils/prisma'
 import RecipeForm from '@/components/forms/RecipeForm'
-import { useRecipeStore } from '@/store/use-recipe-store'
-import { useParams } from 'next/navigation'
+import { SignUpButton } from '@/components/UI/SignUpButton'
 
-export default function EditRecipePage() {
-  const { id } = useParams<{ id: string }>()
-  const { recipes, error, isLoading, hasLoaded } = useRecipeStore()
+interface Props {
+  params: Promise<{ id: string }> // в Next 15+ params — Promise
+}
 
-  const currentRecipe = recipes.find((r) => r.id === id)
+export default async function EditRecipePage({ params }: Props) {
+  const { id } = await params
 
-  if (isLoading || !hasLoaded) {
-    return <p className="text-center text-xl text-gray-500">Loading...</p>
+  const session = await auth()
+  const authorId = session?.user?.id
+
+  if (!authorId) {
+    return (
+      <div className="flex h-96 flex-col items-center justify-center px-4">
+        <h2 className="mb-2 text-xl font-bold">Access restricted</h2>
+        <p className="mb-6 text-center text-gray-500">
+          Log in to your account to edit recipes
+        </p>
+        <SignUpButton />
+      </div>
+    )
   }
 
-  if (error) {
-    return <p className="text-center text-red-600">{error}</p>
-  }
+  const recipe = await prisma.recipe.findUnique({
+    where: { id },
+    include: { ingredients: { include: { ingredient: true } } },
+  })
 
-  if (!currentRecipe) {
+  if (!recipe) {
     return (
       <div className="flex h-150 items-center justify-center">
         <p className="p-10 text-xl text-gray-500 shadow-2xl">
@@ -28,12 +41,22 @@ export default function EditRecipePage() {
     )
   }
 
+  if (recipe.authorId !== authorId) {
+    return (
+      <div className="flex h-150 items-center justify-center">
+        <p className="p-10 text-xl text-gray-500 shadow-2xl">
+          You can only edit your own recipes
+        </p>
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col items-center justify-center p-6">
       <h1 className="px-5 text-4xl font-bold text-orange-600 shadow-2xl">
-        {currentRecipe.name.toUpperCase()}
+        {recipe.name.toUpperCase()}
       </h1>
-      <RecipeForm initialRecipe={currentRecipe} />
+      <RecipeForm initialRecipe={recipe} />
     </div>
   )
 }

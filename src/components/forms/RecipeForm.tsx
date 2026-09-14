@@ -103,12 +103,6 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
       </h2>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-        {errors.root && (
-          <p className="text-center text-sm font-bold text-red-500">
-            {errors.root.message}
-          </p>
-        )}
-
         <div>
           <label className="mb-1 block text-sm font-semibold text-black">
             Recipe Name
@@ -253,6 +247,11 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
             >
               + Add an ingredient field
             </button>
+          )}
+          {errors.root && (
+            <p className="mt-1 text-center text-sm font-bold text-red-500">
+              {errors.root.message}
+            </p>
           )}
         </div>
 
