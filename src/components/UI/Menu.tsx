@@ -3,7 +3,7 @@ import { useAuthStore } from '@/store/use-auth-store'
 import Link from 'next/link'
 import { LogOut } from './LogOut'
 import RegisterButton from './RegisterButton'
-import SignUpButton from './SignUpButton'
+import { SignUpButton } from './SignUpButton'
 
 export default function Menu({
   isMenuOpen,

@@ -1,24 +1,18 @@
-'use client'
-
-import { useRecipeStore } from '@/store/use-recipe-store'
 import Link from 'next/link'
 import RecipeCard from '@/components/UI/common/RecipeCard'
-import SignUpButton from '@/components/UI/SignUpButton'
-import { useSession } from 'next-auth/react'
+import { SignUpButton } from '@/components/UI/SignUpButton'
+import { auth } from '@/auth/auth'
+import { prisma } from '@/utils/prisma'
 
-export default function RecipesPage() {
-  const { recipes, isLoading, error } = useRecipeStore()
-  const { status } = useSession()
+export default async function RecipesPage() {
+  const session = await auth()
+  const userId = session?.user?.id
 
-  if (status === 'loading') {
-    return <p className="py-12 text-center text-gray-500">Loading...</p>
-  }
-
-  if (status !== 'authenticated') {
+  if (!userId) {
     return (
-      <div className="flex h-96 flex-col items-center justify-center px-4 text-black">
-        <h2 className="mb-2 text-xl font-bold">Access restricted</h2>
-        <p className="mb-6 text-center text-gray-500">
+      <div className="flex h-90 flex-col items-center justify-center px-4">
+        <h2 className="text-md mb-2 text-xl font-bold">Access restricted</h2>
+        <p className="mb-2 text-gray-500">
           Log in to your account to view recipes
         </p>
         <SignUpButton />
@@ -26,22 +20,21 @@ export default function RecipesPage() {
     )
   }
 
-  if (isLoading) {
-    return <p className="py-12 text-center text-gray-500">Loading recipes...</p>
-  }
-
-  if (error) {
-    return <p className="py-12 text-center text-red-600">{error}</p>
-  }
+  const recipes = await prisma.recipe.findMany({
+    where: { authorId: userId },
+    include: { ingredients: { include: { ingredient: true } } },
+    orderBy: { createdAt: 'desc' },
+  })
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <div className="mb-4 grid grid-cols-1 gap-3 border-b border-gray-100 text-center">
+      <div className="mb-4 border-b border-gray-100 text-center">
         <h1 className="text-2xl font-bold text-black">Recipes</h1>
-        <Link href="/recipes/new">
-          <button className="rounded-md bg-black px-4 py-2 text-sm font-bold text-white transition duration-300 hover:bg-orange-600">
-            + CREATE RECIPE
-          </button>
+        <Link
+          href="/recipes/new"
+          className="inline-block rounded-md bg-black px-4 py-2 text-sm font-bold text-white transition duration-300 hover:bg-orange-600"
+        >
+          + CREATE RECIPE
         </Link>
       </div>
 

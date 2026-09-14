@@ -1,11 +1,11 @@
-import { IngredientsTable } from '@/components/UI/tables/IngredientsTable'
 import { IngredientForm } from '@/components/forms/IngredientForm'
+import { IngredientsList } from '@/components/UI/tables/IngredientsTable'
 
-export default function Ingredients() {
+export default function IngredientPage() {
   return (
     <div>
       <IngredientForm />
-      <IngredientsTable />
+      <IngredientsList />
     </div>
   )
 }

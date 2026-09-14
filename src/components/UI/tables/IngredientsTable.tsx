@@ -1,31 +1,14 @@
-'use client'
-
+import { auth } from '@/auth/auth'
+import { prisma } from '@/utils/prisma'
 import { siteConf } from '@/config/site.conf'
-import { useAuthStore } from '@/store/use-auth-store'
-import { useIngredientStore } from '@/store/use-ingredient-store'
-import { useSession } from 'next-auth/react'
-import { useEffect } from 'react'
-import { toast } from 'sonner'
-import SignUpButton from '../SignUpButton'
+import { SignUpButton } from '@/components/UI/SignUpButton'
+import { DeleteIngredientButton } from '../common/DeleteIngredientButton'
 
-export function IngredientsTable() {
-  const { ingredients, removeIngredient, isLoading } = useIngredientStore()
-  const { isAuth } = useAuthStore()
-  const { status } = useSession()
+export async function IngredientsList() {
+  const session = await auth()
+  const userId = session?.user?.id
 
-  const error = useIngredientStore((state) => state.error)
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error, { duration: 6000, icon: '💢' })
-    }
-  }, [error])
-
-  if (status === 'loading') {
-    return <p className="py-12 text-center text-gray-500">Loading...</p>
-  }
-
-  if (status !== 'authenticated') {
+  if (!userId) {
     return (
       <div className="flex h-45 flex-col items-center justify-center px-4 text-black">
         <p className="mb-6 text-center text-gray-500">
@@ -36,11 +19,10 @@ export function IngredientsTable() {
     )
   }
 
-  if (isLoading) {
-    return (
-      <p className="py-12 text-center text-gray-500">Loading ingredients...</p>
-    )
-  }
+  const ingredients = await prisma.ingredient.findMany({
+    where: { authorId: userId },
+    orderBy: { createdAt: 'desc' },
+  })
 
   if (ingredients.length === 0) {
     return (
@@ -101,15 +83,7 @@ export function IngredientsTable() {
               </div>
             </div>
 
-            {isAuth && (
-              <button
-                onClick={() => removeIngredient(ingredient.id)}
-                disabled={isLoading}
-                className="flex h-10 w-full items-center justify-center rounded-xl border border-red-300 px-4 font-bold text-red-600 transition-colors hover:border-red-500 hover:bg-red-500 hover:text-white disabled:opacity-50"
-              >
-                Delete
-              </button>
-            )}
+            <DeleteIngredientButton id={ingredient.id} variant="card" />
           </div>
         ))}
       </div>
@@ -150,9 +124,8 @@ export function IngredientsTable() {
               </th>
             </tr>
           </thead>
-
           <tbody className="divide-y divide-gray-200 bg-white">
-            {ingredients.toReversed().map((ingredient) => (
+            {ingredients.map((ingredient) => (
               <tr
                 key={ingredient.id}
                 className="transition-colors hover:bg-gray-50"
@@ -176,15 +149,7 @@ export function IngredientsTable() {
                   )}
                 </td>
                 <td className="px-4 py-4 text-sm font-medium whitespace-nowrap lg:px-6">
-                  {isAuth && (
-                    <button
-                      onClick={() => removeIngredient(ingredient.id)}
-                      disabled={isLoading}
-                      className="rounded-xl px-4 py-2 font-bold text-red-600 transition-colors hover:bg-red-600 hover:text-white"
-                    >
-                      Delete
-                    </button>
-                  )}
+                  <DeleteIngredientButton id={ingredient.id} variant="table" />
                 </td>
               </tr>
             ))}

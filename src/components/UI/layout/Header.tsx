@@ -7,7 +7,7 @@ import { useState } from 'react'
 import Logo from '../Logo'
 import { LogOut } from '../LogOut'
 import RegisterButton from '../RegisterButton'
-import SignUpButton from '../SignUpButton'
+import { SignUpButton } from '../SignUpButton'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)

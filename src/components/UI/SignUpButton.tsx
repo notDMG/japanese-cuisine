@@ -1,8 +1,10 @@
+'use client'
+
 import LoginPage from '@/components/forms/LoginForm'
 import { useState } from 'react'
 import Modal from './common/Modal'
 
-export default function SignUpButton() {
+export function SignUpButton() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
   return (
