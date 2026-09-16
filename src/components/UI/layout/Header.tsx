@@ -1,17 +1,19 @@
 'use client'
 import Menu from '@/components/UI/Menu'
 import { siteConf } from '@/config/site.conf'
-import { useAuthStore } from '@/store/use-auth-store'
 import Link from 'next/link'
 import { useState } from 'react'
 import Logo from '../Logo'
 import { LogOut } from '../LogOut'
 import RegisterButton from '../RegisterButton'
 import { SignUpButton } from '../SignUpButton'
+import { useSession } from 'next-auth/react'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
-  const { isAuth, status } = useAuthStore()
+  const { status } = useSession()
+
+  const isAuth = status === 'authenticated'
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-lg">

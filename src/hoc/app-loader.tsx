@@ -1,5 +1,5 @@
 'use client'
-import { useAuthStore } from '@/store/use-auth-store'
+
 import { useIngredientStore } from '@/store/use-ingredient-store'
 import { useRecipeStore } from '@/store/use-recipe-store'
 import { useSession } from 'next-auth/react'
@@ -10,21 +10,34 @@ interface IProps {
 }
 
 export const AppLoader = ({ children }: IProps) => {
-  const { data: session, status } = useSession()
-  const { setAuthState, isAuth } = useAuthStore()
-  const { loadIngredients } = useIngredientStore()
-  const { loadRecipes } = useRecipeStore()
+  const { status } = useSession()
+
+  const loadIngredients = useIngredientStore((s) => s.loadIngredients)
+  const loadRecipes = useRecipeStore((s) => s.loadRecipes)
+  const ingredientsLoaded = useIngredientStore((s) => s.hasLoaded)
+  const recipesLoaded = useRecipeStore((s) => s.hasLoaded)
+  const resetIngredients = useIngredientStore((s) => s.reset)
+  const resetRecipes = useRecipeStore((s) => s.reset)
 
   useEffect(() => {
-    setAuthState(status, session || null)
-  }, [status, session, setAuthState])
-
-  useEffect(() => {
-    if (isAuth) {
-      loadIngredients()
-      loadRecipes()
+    if (status === 'authenticated') {
+      if (!ingredientsLoaded) loadIngredients()
+      if (!recipesLoaded) loadRecipes()
     }
-  }, [isAuth, loadIngredients, loadRecipes])
+
+    if (status === 'unauthenticated') {
+      resetIngredients()
+      resetRecipes()
+    }
+  }, [
+    status,
+    ingredientsLoaded,
+    recipesLoaded,
+    loadIngredients,
+    loadRecipes,
+    resetIngredients,
+    resetRecipes,
+  ])
 
   return <>{children}</>
 }

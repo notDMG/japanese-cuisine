@@ -1,28 +1,23 @@
 'use client'
 
-import { signOutFunc } from '@/actions/auth/sign-out'
-import { useAuthStore } from '@/store/use-auth-store'
+import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 export function LogOut() {
   const router = useRouter()
-  const setAuthState = useAuthStore((state) => state.setAuthState)
 
   const handleLogout = async () => {
     try {
-      await signOutFunc()
-      setAuthState('unauthenticated', null)
+      await signOut({ redirect: false })
       router.refresh()
+
       toast.success('You have logged out of your account', {
         duration: 4000,
         icon: '💮',
       })
     } catch (error) {
-      toast.error('Error on exit', {
-        duration: 6000,
-        icon: '💢',
-      })
+      toast.error('Error on exit', { duration: 6000, icon: '💢' })
       console.error('Ошибка при выходе:', error)
     }
   }

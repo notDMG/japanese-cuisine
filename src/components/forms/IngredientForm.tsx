@@ -6,8 +6,8 @@ import { useIngredientStore } from '@/store/use-ingredient-store'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
 import { IngredientInput, ingredientSchema } from '@/schema/ingredient'
-import { useAuthStore } from '@/store/use-auth-store'
 import { useState } from 'react'
+import { useSession } from 'next-auth/react'
 
 const defaultValues = {
   name: '',
@@ -19,8 +19,10 @@ const defaultValues = {
 
 export function IngredientForm() {
   const [formKey, setFormKey] = useState(0)
-  const { addIngredient } = useIngredientStore()
-  const { isAuth } = useAuthStore()
+  const addIngredient = useIngredientStore((s) => s.addIngredient)
+  const { status } = useSession()
+
+  const isAuth = status === 'authenticated'
 
   const {
     register,
@@ -38,12 +40,10 @@ export function IngredientForm() {
       return
     }
 
-    await addIngredient(formData)
+    const result = await addIngredient(formData)
 
-    const latestError = useIngredientStore.getState().error
-
-    if (latestError) {
-      toast.error(latestError, { duration: 6000, icon: '💢' })
+    if ('error' in result) {
+      toast.error(result.error, { duration: 6000, icon: '💢' })
       return
     }
 

@@ -19,6 +19,7 @@ interface IRecipeState {
   isLoading: boolean
   hasLoaded: boolean
   error: string | null
+  reset: () => void
   loadRecipes: () => Promise<void>
   addRecipe: (formData: RecipeInput) => Promise<RecipeActionResult>
   updateRecipe: (
@@ -33,6 +34,13 @@ export const useRecipeStore = create<IRecipeState>((set) => ({
   isLoading: false,
   hasLoaded: false,
   error: null,
+  reset: () =>
+    set({
+      recipes: [],
+      isLoading: false,
+      hasLoaded: false,
+      error: null,
+    }),
 
   loadRecipes: async () => {
     set({ isLoading: true, error: null })

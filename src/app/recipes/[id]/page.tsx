@@ -1,11 +1,10 @@
-// app/recipes/[id]/page.tsx
 import { auth } from '@/auth/auth'
 import { prisma } from '@/utils/prisma'
 import RecipeForm from '@/components/forms/RecipeForm'
 import { SignUpButton } from '@/components/UI/SignUpButton'
 
 interface Props {
-  params: Promise<{ id: string }> // в Next 15+ params — Promise
+  params: Promise<{ id: string }>
 }
 
 export default async function EditRecipePage({ params }: Props) {
@@ -36,16 +35,6 @@ export default async function EditRecipePage({ params }: Props) {
       <div className="flex h-150 items-center justify-center">
         <p className="p-10 text-xl text-gray-500 shadow-2xl">
           Recipe not found :(
-        </p>
-      </div>
-    )
-  }
-
-  if (recipe.authorId !== authorId) {
-    return (
-      <div className="flex h-150 items-center justify-center">
-        <p className="p-10 text-xl text-gray-500 shadow-2xl">
-          You can only edit your own recipes
         </p>
       </div>
     )

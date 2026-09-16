@@ -4,19 +4,18 @@ import { signInCredentials } from '@/actions/auth/sign-in'
 import Logo from '@/components/UI/Logo'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { getSession } from 'next-auth/react'
-import { useAuthStore } from '@/store/use-auth-store'
 import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signInSchema, type SignInInput } from '@/schema/sign-in'
+import { useSession } from 'next-auth/react'
 
 interface LoginProps {
   onClose?: () => void
 }
 
 export default function LoginPage({ onClose }: LoginProps) {
-  const { setAuthState } = useAuthStore()
   const router = useRouter()
+  const { update } = useSession()
 
   const {
     register,
@@ -39,8 +38,7 @@ export default function LoginPage({ onClose }: LoginProps) {
       return
     }
 
-    const updatedSession = await getSession()
-    setAuthState('authenticated', updatedSession)
+    await update()
     router.refresh()
 
     reset()

@@ -1,9 +1,11 @@
+'use client'
+
 import { siteConf } from '@/config/site.conf'
-import { useAuthStore } from '@/store/use-auth-store'
 import Link from 'next/link'
 import { LogOut } from './LogOut'
 import RegisterButton from './RegisterButton'
 import { SignUpButton } from './SignUpButton'
+import { useSession } from 'next-auth/react'
 
 export default function Menu({
   isMenuOpen,
@@ -12,7 +14,8 @@ export default function Menu({
   isMenuOpen: boolean
   setIsMenuOpen: (value: boolean) => void
 }) {
-  const { isAuth } = useAuthStore()
+  const { status } = useSession()
+  const isAuth = status === 'authenticated'
 
   return (
     <div className="md:hidden">

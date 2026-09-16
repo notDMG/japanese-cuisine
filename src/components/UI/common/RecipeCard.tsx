@@ -1,31 +1,20 @@
 'use client'
 
-import { useRecipeStore } from '@/store/use-recipe-store'
 import Link from 'next/link'
-import { useTransition } from 'react'
 import Image from 'next/image'
-import { useAuthStore } from '@/store/use-auth-store'
 import { IRecipe } from '@/types/recipe'
 import { UNIT_OPTIONS } from '@/constants/selectOptions'
+import { useSession } from 'next-auth/react'
+import { DeleteRecipeButton } from './DeleteRecipeButton'
 
 interface RecipeCardProps {
   recipe: IRecipe
 }
 
 export default function RecipeCard({ recipe }: RecipeCardProps) {
-  const { removeRecipe } = useRecipeStore()
-  const { isAuth } = useAuthStore()
-  const [isPending, startTransition] = useTransition()
+  const { status } = useSession()
 
-  const handleDelete = () => {
-    startTransition(async () => {
-      try {
-        await removeRecipe(recipe.id)
-      } catch (error) {
-        console.error('Ошибка при удалении рецепта:', error)
-      }
-    })
-  }
+  const isAuth = status === 'authenticated'
 
   const getUnitLabel = (unit: string) => {
     const unitOption = UNIT_OPTIONS.find((option) => option.value === unit)
@@ -79,18 +68,13 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
 
       {isAuth && (
         <div className="mt-auto flex justify-end gap-2 p-6 pt-0">
-          <Link href={`/recipes/${recipe.id}`}>
-            <button className="rounded-md border border-gray-200 px-4 py-2 text-sm font-bold text-black transition-colors duration-300 hover:bg-gray-50">
-              Edit
-            </button>
-          </Link>
-          <button
-            onClick={handleDelete}
-            disabled={isPending}
-            className="h-10 items-center justify-center rounded-xl border border-red-300 px-4 font-bold text-red-600 transition-colors hover:border-red-500 hover:bg-red-500 hover:text-white disabled:opacity-50"
+          <Link
+            href={`/recipes/${recipe.id}`}
+            className="rounded-md border border-gray-200 px-4 py-2 text-sm font-bold text-black transition-colors duration-300 hover:bg-gray-50"
           >
-            {isPending ? 'Deleting...' : 'Delete'}
-          </button>
+            Edit
+          </Link>
+          <DeleteRecipeButton recipeId={recipe.id} />
         </div>
       )}
     </div>

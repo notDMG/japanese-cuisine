@@ -3,6 +3,7 @@
 import { useRecipeStore } from '@/store/use-recipe-store'
 import { useRouter } from 'next/navigation'
 import { useTransition } from 'react'
+import { toast } from 'sonner'
 
 export function DeleteRecipeButton({ recipeId }: { recipeId: string }) {
   const removeRecipe = useRecipeStore((s) => s.removeRecipe)
@@ -12,6 +13,7 @@ export function DeleteRecipeButton({ recipeId }: { recipeId: string }) {
   const handleDelete = () => {
     startTransition(async () => {
       await removeRecipe(recipeId)
+      toast.success('Success')
       router.refresh()
     })
   }

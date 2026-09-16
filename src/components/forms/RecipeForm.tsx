@@ -4,7 +4,7 @@ import { useIngredientStore } from '@/store/use-ingredient-store'
 import { useRecipeStore } from '@/store/use-recipe-store'
 import type { IRecipe } from '@/types/recipe'
 import { recipeSchema, type RecipeInput } from '@/schema/recipe'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   SubmitHandler,
@@ -29,9 +29,15 @@ const initialState: RecipeInput = {
 export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
   const router = useRouter()
   const [imageError, setImageError] = useState(false)
+  const hasLoaded = useIngredientStore((s) => s.hasLoaded)
+  const loadIngredients = useIngredientStore((s) => s.loadIngredients)
 
   const { ingredients: availableIngredients } = useIngredientStore()
   const { addRecipe, updateRecipe } = useRecipeStore()
+
+  useEffect(() => {
+    if (!hasLoaded) loadIngredients()
+  }, [loadIngredients, hasLoaded])
 
   const {
     register,

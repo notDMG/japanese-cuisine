@@ -11,8 +11,10 @@ interface IIngredientStore {
   isLoading: boolean
   isAdding: boolean
   deletingId: string | null
+  hasLoaded: boolean
   error: string | null
   clearError: () => void
+  reset: () => void
   loadIngredients: () => Promise<void>
   addIngredient: (data: IngredientInput) => Promise<ActionIngredientResult>
   removeIngredient: (id: string) => Promise<void>
@@ -23,9 +25,20 @@ export const useIngredientStore = create<IIngredientStore>((set) => ({
   isLoading: false,
   isAdding: false,
   deletingId: null,
+  hasLoaded: false,
   error: null,
 
   clearError: () => set({ error: null }),
+
+  reset: () =>
+    set({
+      ingredients: [],
+      isLoading: false,
+      isAdding: false,
+      deletingId: null,
+      hasLoaded: false,
+      error: null,
+    }),
 
   loadIngredients: async () => {
     set({ isLoading: true, error: null })
@@ -34,13 +47,21 @@ export const useIngredientStore = create<IIngredientStore>((set) => ({
       const result = await getIngredients()
 
       if ('success' in result) {
-        set({ ingredients: result.ingredients, isLoading: false })
+        set({
+          ingredients: result.ingredients,
+          isLoading: false,
+          hasLoaded: true,
+        })
       } else {
-        set({ error: result.error, isLoading: false })
+        set({ error: result.error, isLoading: false, hasLoaded: true })
       }
     } catch (error) {
       console.error('error', error)
-      set({ error: 'Error loading ingredient', isLoading: false })
+      set({
+        error: 'Error loading ingredient',
+        isLoading: false,
+        hasLoaded: true,
+      })
     }
   },
 
@@ -50,7 +71,7 @@ export const useIngredientStore = create<IIngredientStore>((set) => ({
       const result = await createIngredient(data)
       if ('success' in result && result.ingredient) {
         set((state) => ({
-          ingredients: [...state.ingredients, result.ingredient!],
+          ingredients: [result.ingredient!, ...state.ingredients],
           isAdding: false,
         }))
         return { success: true, ingredient: result.ingredient }
@@ -58,12 +79,13 @@ export const useIngredientStore = create<IIngredientStore>((set) => ({
 
       set({ isAdding: false })
       return {
+        success: false,
         error: 'error' in result ? result.error : 'Error adding ingredient',
       }
     } catch (error) {
       console.error('error', error)
       set({ isAdding: false })
-      return { error: 'Error adding ingredient' }
+      return { success: false, error: 'Error adding ingredient' }
     }
   },
 
