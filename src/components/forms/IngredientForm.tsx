@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 import { IngredientInput, ingredientSchema } from '@/schema/ingredient'
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 const defaultValues = {
   name: '',
@@ -21,6 +22,7 @@ export function IngredientForm() {
   const [formKey, setFormKey] = useState(0)
   const addIngredient = useIngredientStore((s) => s.addIngredient)
   const { status } = useSession()
+  const router = useRouter()
 
   const isAuth = status === 'authenticated'
 
@@ -54,10 +56,11 @@ export function IngredientForm() {
     })
 
     setFormKey((prev) => prev + 1)
+    router.refresh()
   }
 
   return (
-    <div className="min-w-90 rounded-xl border border-gray-100 bg-white p-8 shadow-xl">
+    <div className="min-w-90 rounded-xl border border-gray-100 bg-white p-8 shadow-xl md:min-w-120 lg:min-w-140">
       <h2 className="mb-6 border-b-2 border-orange-500 pb-2 text-2xl font-bold text-black">
         New Ingredient
       </h2>

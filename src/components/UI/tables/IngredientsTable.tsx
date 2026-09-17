@@ -139,7 +139,7 @@ export async function IngredientsList() {
                 <td className="px-4 py-4 whitespace-nowrap text-gray-500 lg:px-6">
                   {ingredient.unit}
                 </td>
-                <td className="px-4 py-4 font-semibold whitespace-nowrap text-gray-900 italic lg:px-6">
+                <td className="px-2 py-4 font-semibold whitespace-nowrap text-gray-900 italic lg:px-6">
                   {ingredient.pricePerUnit ? (
                     `${ingredient.pricePerUnit} $`
                   ) : (
