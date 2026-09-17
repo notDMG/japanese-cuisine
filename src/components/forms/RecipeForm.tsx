@@ -94,7 +94,7 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
         { duration: 4000, icon: '🍜' }
       )
       if (!initialRecipe) reset(initialState)
-      router.push('/recipes')
+      router.push('/')
     } else {
       const errorMessage = result.error ?? 'Unknown error'
       setError('root', { message: errorMessage })

@@ -2,6 +2,7 @@
 import Menu from '@/components/UI/Menu'
 import { siteConf } from '@/config/site.conf'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import Logo from '../Logo'
 import { LogOut } from '../LogOut'
@@ -12,8 +13,14 @@ import { useSession } from 'next-auth/react'
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const { status } = useSession()
+  const pathname = usePathname()
 
   const isAuth = status === 'authenticated'
+
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/'
+    return pathname === href || pathname.startsWith(href + '/')
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-lg">
@@ -24,27 +31,36 @@ export default function Header() {
           </Link>
 
           <nav className="hidden items-center space-x-12 md:flex">
-            {siteConf.navItems.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="text-sm font-medium text-gray-700 transition-colors duration-200 hover:text-orange-600"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {siteConf.navItems.map((item) => {
+              const active = isActive(item.href)
+
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  aria-current={active ? 'page' : undefined}
+                  className={
+                    active
+                      ? 'text-sm font-semibold text-orange-600'
+                      : 'text-sm font-medium text-gray-700 transition-colors duration-200 hover:text-orange-600'
+                  }
+                >
+                  {item.label}
+                </Link>
+              )
+            })}
           </nav>
 
           <div className="hidden h-9 min-w-42.5 items-center justify-end md:flex">
             {status === 'loading' ? (
-              <div className="mr-8 hidden h-5 w-5 animate-spin rounded-full border-3 border-solid border-orange-600 border-t-transparent md:block"></div>
+              <div className="mr-8 h-5 w-5 animate-spin rounded-full border-3 border-solid border-orange-600 border-t-transparent"></div>
             ) : !isAuth ? (
-              <div className="hidden items-center space-x-4 md:flex">
+              <div className="flex items-center space-x-4">
                 <SignUpButton />
                 <RegisterButton />
               </div>
             ) : (
-              <div className="hidden items-center space-x-4 md:flex">
+              <div className="flex items-center space-x-4">
                 <LogOut />
               </div>
             )}

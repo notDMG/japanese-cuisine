@@ -29,12 +29,11 @@ export default async function RecipesPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="mb-4 border-b border-gray-100 text-center">
-        <h1 className="mb-4 text-2xl font-bold text-black">Recipes</h1>
         <Link
           href="/recipes/new"
           className="text-md inline-block rounded-md bg-black px-4 py-2 font-bold text-white transition duration-300 hover:bg-orange-600"
         >
-          + CREATE RECIPE
+          + CREATE NEW RECIPE
         </Link>
       </div>
 

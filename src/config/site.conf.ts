@@ -28,7 +28,7 @@ export const siteConf: ISiteConf = {
   title: 'Japanese food',
   description: 'Cool Japanese food',
   navItems: [
-    { label: 'Recipes', href: '/recipes' },
+    { label: 'My recipes', href: '/recipes' },
     { label: 'Ingredients', href: '/ingredients' },
     { label: 'About Us', href: '/about' },
   ],

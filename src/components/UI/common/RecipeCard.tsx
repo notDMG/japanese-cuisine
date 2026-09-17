@@ -3,9 +3,9 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { IRecipe } from '@/types/recipe'
-import { UNIT_OPTIONS } from '@/constants/selectOptions'
 import { useSession } from 'next-auth/react'
 import { DeleteRecipeButton } from './DeleteRecipeButton'
+import { getUnitLabel } from '@/constants/selectOptions'
 
 interface RecipeCardProps {
   recipe: IRecipe
@@ -15,11 +15,6 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
   const { status } = useSession()
 
   const isAuth = status === 'authenticated'
-
-  const getUnitLabel = (unit: string) => {
-    const unitOption = UNIT_OPTIONS.find((option) => option.value === unit)
-    return unitOption ? unitOption.label : unit.toLowerCase()
-  }
 
   return (
     <div className="flex h-120 w-full max-w-md min-w-70 flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
@@ -42,20 +37,24 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
         )}
       </div>
 
-      <div className="flex items-center justify-between px-8 pt-6 text-black">
-        <h2 className="truncate text-xl font-bold">{recipe.name}</h2>
+      <div className="flex flex-col items-start px-8 pt-6">
+        <h2 className="w-full truncate text-left text-xl font-bold text-orange-600">
+          {recipe.name}
+        </h2>
       </div>
 
-      <div className="flex flex-1 flex-col gap-3 overflow-hidden px-8 py-4 text-black">
-        <p className="line-clamp-3 shrink-0 text-sm text-gray-600">
-          {recipe.description || 'Без описания'}
+      <div className="my-2 px-8 py-6">
+        <p className="line-clamp-3 text-center text-sm text-gray-600">
+          {recipe.description || 'No description'}
         </p>
+      </div>
 
-        <div className="flex min-h-0 flex-1 flex-col">
-          <h3 className="mb-1 text-sm font-semibold text-gray-700">
-            Ingredients:
+      <div className="mb-2 flex flex-1 flex-col items-start overflow-hidden px-8 text-left text-black">
+        <div className="flex min-h-0 w-full flex-1 flex-col">
+          <h3 className="mb-2 w-full border-b border-orange-600 pb-1 text-xs font-bold tracking-wider text-gray-700">
+            INGREDIENTS
           </h3>
-          <ul className="list-disc space-y-1 overflow-y-auto pr-1 pl-5 text-sm text-gray-600">
+          <ul className="scrollbar-visible list-disc space-y-1 overflow-y-auto pr-2 pl-5 text-sm text-gray-600">
             {recipe.ingredients.map((ing) => (
               <li key={ing.id}>
                 {ing.ingredient.name}: {ing.quantity}{' '}
