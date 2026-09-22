@@ -106,9 +106,14 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
 
   return (
     <div className="min-w-90 rounded-xl border border-gray-100 bg-white p-4 shadow-xl transition-all duration-300 md:min-w-120 lg:min-w-140">
-      <h2 className="mb-6 border-b-2 border-orange-500 pb-2 text-xl font-bold text-black sm:text-2xl">
-        {initialRecipe ? 'Edit Recipe' : 'New Recipe'}
-      </h2>
+      <div className="mb-6 flex items-center justify-between border-b-2 border-orange-500 pb-2">
+        <h2 className="text-xl font-bold text-black sm:text-2xl">
+          {initialRecipe ? 'Edit Recipe' : 'New Recipe'}
+        </h2>
+        <p className="rounded-xl border border-blue-400 px-2 py-1 text-xs text-blue-400">
+          🌐 public
+        </p>
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
         <div>

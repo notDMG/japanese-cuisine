@@ -1,8 +1,8 @@
-import Link from 'next/link'
 import RecipeCard from '@/components/UI/common/RecipeCard'
 import { SignUpButton } from '@/components/UI/SignUpButton'
 import { auth } from '@/auth/auth'
 import { prisma } from '@/utils/prisma'
+import { CreateRecipeButton } from '@/components/UI/CreateRecipeButton'
 
 export default async function RecipesPage() {
   const session = await auth()
@@ -28,13 +28,11 @@ export default async function RecipesPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <div className="mb-4 border-b border-gray-100 text-center">
-        <Link
-          href="/recipes/new"
-          className="text-md inline-block rounded-md bg-black px-4 py-2 font-bold text-white transition duration-300 hover:bg-orange-600"
-        >
-          + CREATE NEW RECIPE
-        </Link>
+      <div className="mb-2 flex flex-col items-center gap-1">
+        <CreateRecipeButton />
+        <p className="text-xs text-gray-400">
+          🌐 Recipes are public and visible to everyone
+        </p>
       </div>
 
       {recipes.length === 0 ? (
