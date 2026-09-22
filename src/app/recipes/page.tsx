@@ -1,8 +1,8 @@
+import { auth } from '@/auth/auth'
+import { CreateRecipeButton } from '@/components/UI/common/CreateRecipeButton'
 import RecipeCard from '@/components/UI/common/RecipeCard'
 import { SignUpButton } from '@/components/UI/SignUpButton'
-import { auth } from '@/auth/auth'
 import { prisma } from '@/utils/prisma'
-import { CreateRecipeButton } from '@/components/UI/CreateRecipeButton'
 
 export default async function RecipesPage() {
   const session = await auth()

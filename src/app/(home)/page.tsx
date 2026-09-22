@@ -1,6 +1,6 @@
 import { auth } from '@/auth/auth'
+import { CreateRecipeButton } from '@/components/UI/common/CreateRecipeButton'
 import { FeedRecipeCard } from '@/components/UI/common/FeedRecipeCard'
-import { CreateRecipeButton } from '@/components/UI/CreateRecipeButton'
 import { prisma } from '@/utils/prisma'
 
 export default async function HomePage() {
