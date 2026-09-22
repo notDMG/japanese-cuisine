@@ -25,7 +25,7 @@ export function FeedRecipeCard({ recipe, isOwner }: FeedRecipeCardProps) {
   const cost = calculateRecipeCost(recipe)
 
   return (
-    <div className="flex h-120 w-full max-w-md min-w-70 flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
+    <div className="flex h-130 w-full max-w-md min-w-70 flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
       <div className="h-48 overflow-hidden p-4 pb-0">
         {recipe.imageUrl ? (
           <div className="group relative h-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md transition-all hover:shadow-lg">

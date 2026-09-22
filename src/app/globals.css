@@ -46,3 +46,44 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.scrollbar-visible {
+  scrollbar-width: thin;
+  scrollbar-color: #fb923c transparent;
+}
+
+.scrollbar-visible::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-visible::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 9999px;
+}
+
+.scrollbar-visible::-webkit-scrollbar-thumb {
+  background: #fb923c;
+  border-radius: 9999px;
+}
+.scrollbar-visible {
+  scrollbar-width: thin;
+  scrollbar-color: #fb923c transparent;
+}
+
+.scrollbar-visible::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-visible::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 9999px;
+}
+
+.scrollbar-visible::-webkit-scrollbar-thumb {
+  background: #fb923c;
+  border-radius: 9999px;
+}
+
+.scrollbar-visible::-webkit-scrollbar-thumb:hover {
+  background: #f97316;
+}

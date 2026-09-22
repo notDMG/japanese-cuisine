@@ -29,15 +29,17 @@ const initialState: RecipeInput = {
 export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
   const router = useRouter()
   const [imageError, setImageError] = useState(false)
-  const hasLoaded = useIngredientStore((s) => s.hasLoaded)
-  const loadIngredients = useIngredientStore((s) => s.loadIngredients)
 
-  const { ingredients: availableIngredients } = useIngredientStore()
-  const { addRecipe, updateRecipe } = useRecipeStore()
+  const isLoadingIngredients = useIngredientStore((s) => s.isLoading)
+
+  const availableIngredients = useIngredientStore((s) => s.ingredients)
+  const loadIngredients = useIngredientStore((s) => s.loadIngredients)
+  const addRecipe = useRecipeStore((s) => s.addRecipe)
+  const updateRecipe = useRecipeStore((s) => s.updateRecipe)
 
   useEffect(() => {
-    if (!hasLoaded) loadIngredients()
-  }, [loadIngredients, hasLoaded])
+    loadIngredients()
+  }, [loadIngredients])
 
   const {
     register,
@@ -181,21 +183,23 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
                       className="h-10 w-full rounded-md border border-gray-300 px-3 text-black transition-all outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
                     >
                       <option value="">Select ingredient</option>
-                      {availableIngredients.map((ing) => {
-                        const isSelected =
-                          selectedIngredientIds.includes(ing.id) &&
-                          watchedIngredients?.[index]?.ingredientId !== ing.id
+                      {isLoadingIngredients && <option>Loading...</option>}
+                      {!isLoadingIngredients &&
+                        availableIngredients.map((ing) => {
+                          const isSelected =
+                            selectedIngredientIds.includes(ing.id) &&
+                            watchedIngredients?.[index]?.ingredientId !== ing.id
 
-                        return (
-                          <option
-                            key={ing.id}
-                            value={ing.id}
-                            disabled={isSelected}
-                          >
-                            {ing.name} {isSelected ? '(Selected)' : ''}
-                          </option>
-                        )
-                      })}
+                          return (
+                            <option
+                              key={ing.id}
+                              value={ing.id}
+                              disabled={isSelected}
+                            >
+                              {ing.name} {isSelected ? '(Selected)' : ''}
+                            </option>
+                          )
+                        })}
                     </select>
                   </div>
 
