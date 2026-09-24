@@ -11,7 +11,9 @@ export default async function RecipesPage() {
   if (!userId) {
     return (
       <div className="flex h-90 flex-col items-center justify-center px-4">
-        <h2 className="text-md mb-2 text-xl font-bold">Access restricted</h2>
+        <h2 className="text-md mb-2 text-xl font-bold text-orange-500">
+          Access restricted
+        </h2>
         <p className="mb-2 text-gray-500">
           Log in to your account to view recipes
         </p>

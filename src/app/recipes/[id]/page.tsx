@@ -16,9 +16,11 @@ export default async function EditRecipePage({ params }: Props) {
   if (!authorId) {
     return (
       <div className="flex h-96 flex-col items-center justify-center px-4">
-        <h2 className="mb-2 text-xl font-bold">Access restricted</h2>
+        <h2 className="mb-2 text-xl font-bold text-orange-500">
+          Access restricted
+        </h2>
         <p className="mb-6 text-center text-gray-500">
-          Log in to your account to edit recipes
+          Log in to your account to edit or view recipes
         </p>
         <SignUpButton />
       </div>
