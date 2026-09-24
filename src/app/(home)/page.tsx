@@ -19,7 +19,7 @@ export default async function HomePage() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
       {recipes.length === 0 ? (
-        <div className="mb-4 border-b border-gray-100 text-center">
+        <div className="mb-4 flex flex-col items-center">
           <h1 className="mb-4 text-2xl font-bold text-black">BE THE FIRST</h1>
           <CreateRecipeButton />
 
@@ -28,7 +28,7 @@ export default async function HomePage() {
           </p>
         </div>
       ) : (
-        <div className="mb-4 flex flex-col items-center border-b border-gray-100">
+        <div className="mb-4 flex flex-col items-center">
           <CreateRecipeButton />
 
           <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
