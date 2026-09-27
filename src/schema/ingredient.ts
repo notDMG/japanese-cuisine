@@ -4,6 +4,7 @@ export const ingredientSchema = z.object({
   name: z
     .string({ error: 'Name is required' })
     .min(2, { message: 'Minimum 2 characters' })
+    .max(30, { message: 'Maximum 30 characters' })
     .regex(/^[A-Za-zА-Яа-яЁё\s]+$/, {
       message: 'Name must consist of letters only',
     }),

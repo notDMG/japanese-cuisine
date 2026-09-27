@@ -17,10 +17,10 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
   const isAuth = status === 'authenticated'
 
   return (
-    <div className="flex h-125 w-full max-w-md min-w-70 flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
-      <div className="h-48 overflow-hidden p-4 pb-0">
+    <div className="flex w-full max-w-80 flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
+      <div className="h-48 px-4 pt-4">
         {recipe.imageUrl ? (
-          <div className="group relative h-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md transition-all hover:shadow-lg">
+          <div className="group relative h-full overflow-hidden rounded-lg border border-gray-100 bg-gray-50 shadow-sm">
             <Image
               src={recipe.imageUrl}
               alt={recipe.name}
@@ -29,53 +29,57 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
             />
           </div>
         ) : (
-          <div className="flex h-full w-full items-center justify-center rounded-lg border border-gray-200 bg-gray-50">
-            <span className="text-sm font-semibold text-gray-400">
+          <div className="flex h-full items-center justify-center rounded-lg border border-dashed border-gray-200 bg-gray-50">
+            <span className="text-xs font-medium tracking-wider text-gray-400 uppercase">
               No image
             </span>
           </div>
         )}
       </div>
 
-      <div className="flex flex-col items-start px-8 pt-6">
-        <h2 className="w-full truncate text-left text-xl font-bold text-orange-600">
+      <div className="flex flex-1 flex-col p-6">
+        <h2
+          className="truncate text-xl font-bold text-orange-600"
+          title={recipe.name}
+        >
           {recipe.name}
         </h2>
-      </div>
 
-      <div className="my-2 px-8 py-6">
-        <p className="line-clamp-3 text-center text-sm text-gray-600">
+        <p className="mt-2 line-clamp-3 text-left text-sm text-gray-600">
           {recipe.description || 'No description'}
         </p>
-      </div>
 
-      <div className="mb-2 flex flex-1 flex-col items-start overflow-hidden px-8 text-left text-black">
-        <div className="flex min-h-0 w-full flex-1 flex-col">
-          <h3 className="mb-2 w-full border-b border-orange-600 pb-1 text-xs font-bold tracking-wider text-gray-700">
-            INGREDIENTS
+        <div className="my-4 flex min-h-0 flex-1 flex-col">
+          <h3 className="mb-2 border-b border-orange-600 pb-1 text-xs font-bold tracking-wider text-gray-700 uppercase">
+            Ingredients
           </h3>
-          <ul className="scrollbar-visible list-disc space-y-1 overflow-y-auto pr-2 pl-5 text-sm text-gray-600">
-            {recipe.ingredients.map((ing) => (
-              <li key={ing.id}>
-                {ing.ingredient.name}: {ing.quantity}{' '}
-                {getUnitLabel(ing.ingredient.unit)}
-              </li>
-            ))}
-          </ul>
+          <div className="scrollbar-visible max-h-25 overflow-y-auto pr-3 text-sm text-gray-600">
+            <ul className="list-disc space-y-1 pl-4">
+              {recipe.ingredients.map((ing) => (
+                <li key={ing.id} className="marker:text-orange-400">
+                  <span className="font-medium text-gray-700">
+                    {ing.ingredient.name}
+                  </span>
+                  <span className="text-gray-400">: </span>
+                  {ing.quantity} {getUnitLabel(ing.ingredient.unit)}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </div>
 
-      {isAuth && (
-        <div className="mt-auto flex justify-end gap-2 p-6 pt-0">
-          <Link
-            href={`/recipes/${recipe.id}`}
-            className="rounded-md border border-gray-200 px-4 py-2 text-sm font-bold text-black transition-colors duration-300 hover:bg-gray-50"
-          >
-            Edit
-          </Link>
-          <DeleteRecipeButton recipeId={recipe.id} />
-        </div>
-      )}
+        {isAuth && (
+          <div className="mt-auto flex justify-end gap-2 pt-4">
+            <Link
+              href={`/recipes/${recipe.id}`}
+              className="flex items-center justify-center rounded-lg border border-gray-200 px-4 py-2 text-sm font-bold text-gray-700 transition-colors hover:bg-orange-600 hover:text-white"
+            >
+              Edit
+            </Link>
+            <DeleteRecipeButton recipeId={recipe.id} />
+          </div>
+        )}
+      </div>
     </div>
   )
 }

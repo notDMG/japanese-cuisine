@@ -19,8 +19,8 @@ export const recipeSchema = z.object({
 
   description: z
     .string({ error: 'Description is required' })
-    .min(10, { message: 'Description must be at least 10 characters' })
-    .max(2000, { message: 'Description must not exceed 2000 characters' })
+    .min(5, { message: 'Description must be at least 10 characters' })
+    .max(100, { message: 'Description must not exceed 100 characters' })
     .trim(),
 
   imageUrl: z

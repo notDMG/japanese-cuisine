@@ -35,7 +35,7 @@ export async function IngredientsList() {
   }
 
   return (
-    <div className="mt-5 w-full px-2 md:px-0">
+    <div className="mt-5 w-full max-w-5xl px-2 md:px-0">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-8 md:hidden">
         {ingredients.map((ingredient) => (
           <div

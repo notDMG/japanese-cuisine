@@ -170,13 +170,15 @@ export function IngredientForm() {
           />
         </div>
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full rounded-md bg-black py-3 text-sm font-bold tracking-wider text-white uppercase shadow-md transition-colors duration-500 hover:bg-orange-600 disabled:bg-gray-400"
-        >
-          {isSubmitting ? 'Adding...' : 'Add Ingredient'}
-        </button>
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full rounded-md bg-black py-3 text-sm font-bold tracking-wider text-white uppercase shadow-md transition-colors duration-500 hover:bg-orange-600 disabled:bg-gray-400 sm:w-60 md:w-65 lg:w-75"
+          >
+            {isSubmitting ? 'Adding...' : 'Add Ingredient'}
+          </button>
+        </div>
       </form>
     </div>
   )

@@ -32,7 +32,7 @@ export default async function RecipesPage() {
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="mb-2 flex flex-col items-center gap-1">
         <CreateRecipeButton />
-        <p className="text-xs text-gray-400">
+        <p className="mb-2 text-xs text-gray-400">
           🌐 Recipes are public and visible to everyone
         </p>
       </div>
