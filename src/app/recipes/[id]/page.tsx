@@ -47,7 +47,7 @@ export default async function EditRecipePage({ params }: Props) {
       <h1 className="px-5 text-4xl font-bold text-orange-600 shadow-2xl">
         {recipe.name.toUpperCase()}
       </h1>
-      <RecipeForm initialRecipe={recipe} />
+      <RecipeForm key={recipe.id} initialRecipe={recipe} />
     </div>
   )
 }

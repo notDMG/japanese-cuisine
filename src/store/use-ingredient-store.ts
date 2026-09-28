@@ -20,7 +20,7 @@ interface IIngredientStore {
   removeIngredient: (id: string) => Promise<void>
 }
 
-export const useIngredientStore = create<IIngredientStore>((set) => ({
+export const useIngredientStore = create<IIngredientStore>((set, get) => ({
   ingredients: [],
   isLoading: false,
   isAdding: false,
@@ -41,7 +41,8 @@ export const useIngredientStore = create<IIngredientStore>((set) => ({
     }),
 
   loadIngredients: async () => {
-    set({ isLoading: true, error: null })
+    const silent = get().hasLoaded
+    if (!silent) set({ isLoading: true, error: null })
 
     try {
       const result = await getIngredients()

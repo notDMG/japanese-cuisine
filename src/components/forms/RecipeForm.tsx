@@ -31,7 +31,6 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
   const [imageError, setImageError] = useState(false)
 
   const isLoadingIngredients = useIngredientStore((s) => s.isLoading)
-
   const availableIngredients = useIngredientStore((s) => s.ingredients)
   const loadIngredients = useIngredientStore((s) => s.loadIngredients)
   const addRecipe = useRecipeStore((s) => s.addRecipe)
@@ -183,14 +182,15 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
               <div key={field.id} className="flex flex-col">
                 <div className="flex items-center gap-2">
                   <div className="flex-1">
-                    <select
-                      {...register(`ingredients.${index}.ingredientId`)}
-                      className="h-10 w-full rounded-md border border-gray-300 px-3 text-black transition-all outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
-                    >
-                      <option value="">Select ingredient</option>
-                      {isLoadingIngredients && <option>Loading...</option>}
-                      {!isLoadingIngredients &&
-                        availableIngredients.map((ing) => {
+                    {isLoadingIngredients ? (
+                      <div className="h-10 w-full animate-pulse rounded-md border border-gray-300 bg-gray-300" />
+                    ) : (
+                      <select
+                        {...register(`ingredients.${index}.ingredientId`)}
+                        className="h-10 w-full rounded-md border border-gray-300 px-3 text-black transition-all outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
+                      >
+                        <option value="">Select ingredient</option>
+                        {availableIngredients.map((ing) => {
                           const isSelected =
                             selectedIngredientIds.includes(ing.id) &&
                             watchedIngredients?.[index]?.ingredientId !== ing.id
@@ -205,7 +205,8 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
                             </option>
                           )
                         })}
-                    </select>
+                      </select>
+                    )}
                   </div>
 
                   <div className="w-20 sm:w-24">
