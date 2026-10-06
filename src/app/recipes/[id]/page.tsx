@@ -1,7 +1,8 @@
 import { auth } from '@/auth/auth'
-import { prisma } from '@/utils/prisma'
 import RecipeForm from '@/components/forms/RecipeForm'
-import { SignUpButton } from '@/components/UI/SignUpButton'
+import RecipeView from '@/components/UI/common/RecipeView'
+import { SignInButton } from '@/components/UI/SignInButton'
+import { prisma } from '@/utils/prisma'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -20,9 +21,9 @@ export default async function EditRecipePage({ params }: Props) {
           Access restricted
         </h2>
         <p className="mb-6 text-center text-gray-500">
-          Log in to your account to edit or view recipes
+          Log in to your account to view recipes
         </p>
-        <SignUpButton />
+        <SignInButton />
       </div>
     )
   }
@@ -31,6 +32,8 @@ export default async function EditRecipePage({ params }: Props) {
     where: { id },
     include: { ingredients: { include: { ingredient: true } } },
   })
+
+  const isOwner = authorId === recipe?.authorId
 
   if (!recipe) {
     return (
@@ -47,7 +50,11 @@ export default async function EditRecipePage({ params }: Props) {
       <h1 className="px-5 text-4xl font-bold text-orange-600 shadow-2xl">
         {recipe.name.toUpperCase()}
       </h1>
-      <RecipeForm key={recipe.id} initialRecipe={recipe} />
+      {isOwner ? (
+        <RecipeForm key={recipe.id} initialRecipe={recipe} />
+      ) : (
+        <RecipeView recipe={recipe} />
+      )}
     </div>
   )
 }

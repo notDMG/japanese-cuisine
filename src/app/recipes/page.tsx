@@ -1,7 +1,7 @@
 import { auth } from '@/auth/auth'
 import { CreateRecipeButton } from '@/components/UI/common/CreateRecipeButton'
 import RecipeCard from '@/components/UI/common/RecipeCard'
-import { SignUpButton } from '@/components/UI/SignUpButton'
+import { SignInButton } from '@/components/UI/SignInButton'
 import { prisma } from '@/utils/prisma'
 
 export default async function RecipesPage() {
@@ -17,7 +17,7 @@ export default async function RecipesPage() {
         <p className="mb-2 text-gray-500">
           Log in to your account to view recipes
         </p>
-        <SignUpButton />
+        <SignInButton />
       </div>
     )
   }
