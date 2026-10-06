@@ -109,7 +109,7 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
         <h2 className="text-xl font-bold text-black sm:text-2xl">
           {initialRecipe ? 'Edit Recipe' : 'New Recipe'}
         </h2>
-        <p className="rounded-xl border border-blue-400 px-2 py-1 text-xs text-blue-400">
+        <p className="rounded-xl border border-blue-400 px-2 py-1 text-xs text-gray-400">
           🌐 public
         </p>
       </div>

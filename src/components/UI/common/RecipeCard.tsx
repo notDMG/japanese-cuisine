@@ -17,7 +17,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
   const isAuth = status === 'authenticated'
 
   return (
-    <div className="flex w-full max-w-80 flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
+    <div className="flex w-full max-w-85 flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
       <div className="h-48 px-4 pt-4">
         {recipe.imageUrl ? (
           <div className="group relative h-full overflow-hidden rounded-lg border border-gray-100 bg-gray-50 shadow-sm">

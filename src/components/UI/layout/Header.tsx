@@ -7,7 +7,7 @@ import { useState } from 'react'
 import Logo from '../Logo'
 import { LogOut } from '../LogOut'
 import RegisterButton from '../RegisterButton'
-import { SignUpButton } from '../SignUpButton'
+import { SignInButton } from '../SignInButton'
 import { useSession } from 'next-auth/react'
 
 export default function Header() {
@@ -24,7 +24,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-lg">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto rounded px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link href="/">
             <Logo />
@@ -56,7 +56,7 @@ export default function Header() {
               <div className="mr-8 h-5 w-5 animate-spin rounded-full border-3 border-solid border-orange-600 border-t-transparent"></div>
             ) : !isAuth ? (
               <div className="flex items-center space-x-4">
-                <SignUpButton />
+                <SignInButton />
                 <RegisterButton />
               </div>
             ) : (

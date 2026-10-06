@@ -7,7 +7,8 @@ export const recipeIngredientSchema = z.object({
 
   quantity: z
     .number({ error: 'Quantity is required' })
-    .positive({ message: 'Quantity must be greater than 0' }),
+    .positive({ message: 'Quantity must be greater than 0' })
+    .max(10000, { error: 'Quantity must not exceed 10000' }),
 })
 
 export const recipeSchema = z.object({
@@ -20,7 +21,7 @@ export const recipeSchema = z.object({
   description: z
     .string({ error: 'Description is required' })
     .min(5, { message: 'Description must be at least 5 characters' })
-    .max(100, { message: 'Description must not exceed 100 characters' })
+    .max(400, { message: 'Description must not exceed 400 characters' })
     .trim(),
 
   imageUrl: z

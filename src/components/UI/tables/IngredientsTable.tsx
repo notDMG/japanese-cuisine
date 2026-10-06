@@ -1,7 +1,7 @@
 import { auth } from '@/auth/auth'
 import { prisma } from '@/utils/prisma'
 import { siteConf } from '@/config/site.conf'
-import { SignUpButton } from '@/components/UI/SignUpButton'
+import { SignInButton } from '@/components/UI/SignInButton'
 import { DeleteIngredientButton } from '../common/DeleteIngredientButton'
 
 export async function IngredientsList() {
@@ -14,7 +14,7 @@ export async function IngredientsList() {
         <p className="mb-6 text-center text-gray-500">
           Log in to your account to view your ingredients
         </p>
-        <SignUpButton />
+        <SignInButton />
       </div>
     )
   }

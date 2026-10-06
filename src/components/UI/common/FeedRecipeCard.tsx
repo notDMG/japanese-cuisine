@@ -25,7 +25,7 @@ export function FeedRecipeCard({ recipe, isOwner }: FeedRecipeCardProps) {
   const cost = calculateRecipeCost(recipe)
 
   return (
-    <div className="flex w-full max-w-80 flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
+    <div className="flex w-full max-w-85 flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-xl">
       <div className="h-48 px-4 pt-4">
         {recipe.imageUrl ? (
           <div className="group relative h-full overflow-hidden rounded-lg border border-gray-100 bg-gray-50 shadow-sm">
@@ -103,15 +103,26 @@ export function FeedRecipeCard({ recipe, isOwner }: FeedRecipeCardProps) {
           </div>
         </div>
 
-        <div className="mt-auto flex justify-end gap-2">
-          <Link
-            href={`/recipes/${recipe.id}`}
-            className="flex items-center justify-center rounded-lg border border-gray-200 px-4 py-2 text-sm font-bold text-gray-700 transition-colors hover:bg-orange-600 hover:text-white"
-          >
-            View
-          </Link>
-          {isOwner && <DeleteRecipeButton recipeId={recipe.id} />}
-        </div>
+        {isOwner ? (
+          <div className="mt-auto flex justify-end gap-2">
+            <Link
+              href={`/recipes/${recipe.id}`}
+              className="flex items-center justify-center rounded-lg border border-gray-200 px-4 py-2 text-sm font-bold text-gray-700 transition-colors hover:bg-orange-600 hover:text-white"
+            >
+              Edit
+            </Link>
+            {<DeleteRecipeButton recipeId={recipe.id} />}
+          </div>
+        ) : (
+          <div className="mt-auto flex justify-end gap-2">
+            <Link
+              href={`/recipes/${recipe.id}`}
+              className="flex items-center justify-center rounded-lg border border-gray-200 px-4 py-2 text-sm font-bold text-gray-700 transition-colors hover:bg-orange-600 hover:text-white"
+            >
+              View
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   )

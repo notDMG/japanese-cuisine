@@ -23,7 +23,7 @@ export async function updateRecipe(
   const existing = await prisma.recipe.findUnique({ where: { id } })
   if (!existing) return { error: 'Recipe not found' }
   if (existing.authorId !== authorId) {
-    return { error: 'You can only edit your only recipe' }
+    return { error: 'You can only edit your own recipe' }
   }
 
   const parsed = recipeSchema.safeParse(formData)

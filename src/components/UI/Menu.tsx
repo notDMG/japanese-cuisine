@@ -6,7 +6,8 @@ import { usePathname } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { LogOut } from './LogOut'
 import RegisterButton from './RegisterButton'
-import { SignUpButton } from './SignUpButton'
+import { SignInButton } from './SignInButton'
+import { useState } from 'react'
 
 export default function Menu({
   isMenuOpen,
@@ -17,6 +18,7 @@ export default function Menu({
 }) {
   const { status } = useSession()
   const pathname = usePathname()
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
   const isAuth = status === 'authenticated'
 
@@ -65,7 +67,7 @@ export default function Menu({
       </button>
 
       {isMenuOpen && (
-        <div className="absolute top-full right-0 left-0 rounded-lg border border-gray-300 bg-white py-4 shadow-lg">
+        <div className="absolute top-full right-0 left-0 rounded-lg border border-gray-300 bg-white py-2 shadow-lg">
           <div className="flex flex-col space-y-2 px-4">
             {siteConf.navItems.map((item) => {
               const active = isActive(item.href)
@@ -77,8 +79,8 @@ export default function Menu({
                   aria-current={active ? 'page' : undefined}
                   className={
                     active
-                      ? 'rounded-lg bg-gray-50 px-4 py-3 text-base font-semibold text-orange-600'
-                      : 'rounded-lg px-4 py-3 text-base font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-50 hover:text-orange-600'
+                      ? 'rounded-lg px-4 py-3 text-base font-semibold text-orange-600'
+                      : 'rounded-lg px-4 py-3 text-base font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-300/60 hover:text-orange-600'
                   }
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -88,16 +90,16 @@ export default function Menu({
             })}
 
             <div
-              onClick={() => setIsMenuOpen(false)}
               className={isAuth ? '' : 'w-full'}
+              onClick={() => setIsModalOpen(true)}
             >
               {isAuth ? (
                 <div className="text-right">
                   <LogOut />
                 </div>
               ) : (
-                <div className="flex w-full flex-col space-y-3 rounded-lg border-gray-100 bg-gray-100 p-4">
-                  <SignUpButton />
+                <div className="flex items-center justify-end rounded-lg p-4">
+                  <SignInButton />
                   <RegisterButton />
                 </div>
               )}
