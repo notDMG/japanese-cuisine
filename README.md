@@ -267,4 +267,7 @@ npm run format:check  # Проверка форматирования
 [![Telegram](https://img.shields.io/badge/Telegram-@dmglIl-2CA5E0?logo=telegram&logoColor=white)](https://t.me/dmglIl)
 [![Gmail](https://img.shields.io/badge/Gmail-dimagerasimov300@gmail.com-D14836?logo=gmail&logoColor=white)](mailto:dimagerasimov300@gmail.com)
 
-Репозиторий: [github.com/notDMG/japanese-cuisine](https://github.com/notDMG/japanese-cuisine)
+## Демо и Репозиторий
+
+- **Demo:** [Посмотреть демо](https://japanese-cuisine-six.vercel.app/)
+- **GitHub Repository:** [Исходный код](https://github.com/notDMG/japanese-cuisine)
