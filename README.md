@@ -45,6 +45,10 @@
 
 **Japanese Cuisine** - пет-проект, в котором пользователи ведут собственный список ингредиентов с ценами и собирают из них рецепты японской кухни. Стоимость блюда считается автоматически.
 
+- **Demo:** [Посмотреть демо](https://japanese-cuisine-six.vercel.app/)
+- **Email:** Alena@gmail.com
+- **Password:** 123123f
+
 > Проект создан для практики с Next.js App Router, Prisma ORM и аутентификацией через NextAuth v5.
 
 ### Features
