@@ -4,6 +4,7 @@ import { auth } from '@/auth/auth'
 import { recipeSchema } from '@/schema/recipe'
 import { RecipeActionResult } from '@/types/recipe'
 import { prisma } from '@/utils/prisma'
+import { ownsRecipeIngredients } from '@/utils/recipe-ingredients'
 
 export async function createRecipe(
   formData: unknown
@@ -16,12 +17,16 @@ export async function createRecipe(
   const parsed = recipeSchema.safeParse(formData)
 
   if (!parsed.success) {
-    const firstError = parsed.error.issues[0]?.message
+    const firstError = parsed.error.issues[0]?.message || 'Invalid input data'
     return { error: firstError }
   }
 
   try {
     const { name, description, imageUrl, ingredients } = parsed.data
+
+    if (!(await ownsRecipeIngredients(authorId, ingredients))) {
+      return { error: 'One or more ingredients are unavailable' }
+    }
 
     const recipe = await prisma.recipe.create({
       data: {

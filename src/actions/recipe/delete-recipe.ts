@@ -16,19 +16,16 @@ export async function deleteRecipe(id: string): Promise<ActionResult> {
     return { error: 'Invalid recipe ID' }
   }
 
-  const existing = await prisma.recipe.findUnique({ where: { id } })
-  if (!existing) return { error: 'Recipe not found' }
-  if (existing.authorId !== authorId) {
-    return { error: 'You can only delete your own recipes' }
-  }
-
   try {
-    await prisma.recipeIngredient.deleteMany({
-      where: { recipeId: id },
-    })
+    const existing = await prisma.recipe.findUnique({ where: { id } })
+    if (!existing) return { error: 'Recipe not found' }
+    if (existing.authorId !== authorId) {
+      return { error: 'You can only delete your own recipes' }
+    }
 
-    await prisma.recipe.delete({
-      where: { id },
+    await prisma.$transaction(async (tx) => {
+      await tx.recipeIngredient.deleteMany({ where: { recipeId: id } })
+      await tx.recipe.delete({ where: { id } })
     })
 
     return { success: true }
