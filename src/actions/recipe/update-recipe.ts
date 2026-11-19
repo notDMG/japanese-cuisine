@@ -4,6 +4,7 @@ import { auth } from '@/auth/auth'
 import { recipeSchema } from '@/schema/recipe'
 import { RecipeActionResult } from '@/types/recipe'
 import { prisma } from '@/utils/prisma'
+import { ownsRecipeIngredients } from '@/utils/recipe-ingredients'
 
 export async function updateRecipe(
   id: string,
@@ -20,12 +21,6 @@ export async function updateRecipe(
     return { error: 'Invalid recipe ID' }
   }
 
-  const existing = await prisma.recipe.findUnique({ where: { id } })
-  if (!existing) return { error: 'Recipe not found' }
-  if (existing.authorId !== authorId) {
-    return { error: 'You can only edit your own recipe' }
-  }
-
   const parsed = recipeSchema.safeParse(formData)
 
   if (!parsed.success) {
@@ -34,7 +29,17 @@ export async function updateRecipe(
   }
 
   try {
+    const existing = await prisma.recipe.findUnique({ where: { id } })
+    if (!existing) return { error: 'Recipe not found' }
+    if (existing.authorId !== authorId) {
+      return { error: 'You can only edit your own recipe' }
+    }
+
     const { name, description, imageUrl, ingredients } = parsed.data
+
+    if (!(await ownsRecipeIngredients(authorId, ingredients))) {
+      return { error: 'One or more ingredients are unavailable' }
+    }
 
     const recipe = await prisma.recipe.update({
       where: { id },

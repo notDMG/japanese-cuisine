@@ -139,11 +139,12 @@ export default function RecipeForm({ initialRecipe }: RecipeFormProps) {
             Image URL
           </label>
           <input
-            {...register('imageUrl')}
+            {...register('imageUrl', {
+              onChange: () => setImageError(false),
+            })}
             type="text"
             placeholder="https://example.com/image.jpg"
             className="h-10 w-full rounded-md border border-gray-300 px-4 text-black transition-all outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
-            onChange={() => setImageError(false)}
           />
           <div className="h-5">
             {errors.imageUrl && (

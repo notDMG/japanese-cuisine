@@ -5,6 +5,7 @@ import { getRecipes } from '@/actions/recipe/get-recipes'
 import { updateRecipe } from '@/actions/recipe/update-recipe'
 import type { RecipeInput } from '@/schema/recipe'
 import type { Recipe } from '@/generated/prisma'
+import type { ActionResult } from '@/types/action-result'
 
 type RecipeWithIngredients = Exclude<
   Awaited<ReturnType<typeof getRecipes>>,
@@ -26,7 +27,7 @@ interface IRecipeState {
     id: string,
     formData: RecipeInput
   ) => Promise<RecipeActionResult>
-  removeRecipe: (id: string) => Promise<void>
+  removeRecipe: (id: string) => Promise<ActionResult>
 }
 
 export const useRecipeStore = create<IRecipeState>((set) => ({
@@ -134,12 +135,15 @@ export const useRecipeStore = create<IRecipeState>((set) => ({
           recipes: state.recipes.filter((recipe) => recipe.id !== id),
           isLoading: false,
         }))
+        return { success: true }
       } else {
         set({ isLoading: false, error: result.error })
+        return { error: result.error }
       }
     } catch (error) {
       console.error('Error: ', error)
       set({ isLoading: false, error: 'Error deleting recipe' })
+      return { error: 'Error deleting recipe' }
     }
   },
 }))

@@ -12,7 +12,12 @@ export function DeleteRecipeButton({ recipeId }: { recipeId: string }) {
 
   const handleDelete = () => {
     startTransition(async () => {
-      await removeRecipe(recipeId)
+      const result = await removeRecipe(recipeId)
+      if ('error' in result) {
+        toast.error(result.error)
+        return
+      }
+
       toast.success('The recipe was deleted')
       router.refresh()
     })
